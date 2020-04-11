@@ -1,0 +1,147 @@
+
+.app-calendar_news #app {
+	width: 100%;
+}
+
+.calendar-news-wrapper {
+	position: relative;
+}
+
+.calendar-news-wrapper label {
+	font-weight: bold;
+}
+
+.calendar-news-wrapper label input,
+.calendar-news-wrapper label textarea,
+.calendar-news-wrapper label select {
+	width: 100%;
+	display: block;
+}
+
+.calendar-news-wrapper h3 button {
+	width: 20px;
+	height: 20px;
+}
+
+.view-container {
+	width: 50%;
+	padding: 5px;
+}
+
+.calendar-news-wrapper .element-badge {
+	display: inline-block;
+	background-color: #ddd;
+	border-radius: 5px;
+	margin-right: 10px;
+	background-clip: border-box;
+}
+
+#config-container .calendar-badge {
+	display: inline-block;
+	background-color: #ddd;
+	border-radius: 5px;
+	margin-right: 10px;
+	background-clip: border-box;
+}
+
+#config-container .config-section {
+	background-color: #ccc;
+	border-radius: 5px;
+	background-clip: border-box;
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.preview-container {
+	position: absolute;
+	width: 50%;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.preview-container .preview-form {
+	height: 40px;
+	line-height: 40px;
+	font-size: 20px;
+}
+
+.preview-container .preview-form label {
+	vertical-align: middle;
+	margin-right: 20px;
+}
+
+.preview-container .preview-form input[type=datetime-local] {
+	display: inline-block;
+	width: 200px;
+}
+
+.preview-container .preview-form input[type=radio] {
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+}
+
+.preview-container .preview-form button {
+	float: right;
+	height: 30px;
+}
+
+.preview-container .preview-iframe-container {
+	position: absolute;
+	top: 40px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.preview-container .preview-iframe {
+	width: 100%;
+	height: 100%;
+}
+
+.calendar-news-simple {
+	width: 100%;
+}
+
+.calendar-news-simple #app-content {
+	height: calc(100% - 50px);
+}
+
+.calendar-news-simple #app-content-wrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	/* IE11 */
+	height: 100%;
+}
+
+.calendar-news-simple #app-content-wrapper .center-container {
+	display: flex;
+	flex: 0 0 50%;
+	flex-direction: column;
+	height: 100%;
+}
+
+.calendar-news-simple #app-content-wrapper .center-container .note {
+	flex-grow: 0;
+	text-align: center;
+	border: 2px solid red;
+	margin: 5px;
+}
+
+.calendar-news-simple #app-content-wrapper .center-container iframe {
+	flex: 1 0 auto;
+	/* IE11 */
+	width: 100%;
+}
+
+.calendar-news-simple #app-content-wrapper .center-container .loading {
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+}
+
+.calendar-news-simple #app-content-wrapper .center-container .loading > div {
+	flex-grow: 0;
+}

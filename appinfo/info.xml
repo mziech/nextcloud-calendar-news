@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>calendar_news</id>
+    <name>Calendar Newsletter</name>
+    <summary>Calendar-based Newsletter</summary>
+    <description><![CDATA[This generates frequent e-mail newsletters based on selected calendars.]]></description>
+    <version>1.0.1</version>
+    <licence>agpl</licence>
+    <author mail="marco+nc@ziech.net" homepage="https://github.com/mziech">Marco Ziech</author>
+    <namespace>CalendarNews</namespace>
+    <types/>
+    <category>organization</category>
+    <website>https://github.com/mziech/nextcloud-calendar-news</website>
+    <discussion>https://github.com/mziech/nextcloud-calendar-news/pulls</discussion>
+    <bugs>https://github.com/mziech/nextcloud-calendar-news/issues</bugs>
+    <dependencies>
+        <owncloud min-version="10"/>
+        <nextcloud min-version="15" max-version="19"/>
+    </dependencies>
+    <background-jobs>
+        <job>OCA\CalendarNews\Job\MailJob</job>
+    </background-jobs>
+</info>
