@@ -5,7 +5,7 @@
     <name>Calendar Newsletter</name>
     <summary>Calendar-based Newsletter</summary>
     <description><![CDATA[This generates frequent e-mail newsletters based on selected calendars.]]></description>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <licence>agpl</licence>
     <author mail="marco+nc@ziech.net" homepage="https://github.com/mziech">Marco Ziech</author>
     <namespace>CalendarNews</namespace>
@@ -21,4 +21,13 @@
     <background-jobs>
         <job>OCA\CalendarNews\Job\MailJob</job>
     </background-jobs>
+    <navigations>
+        <navigation>
+            <id>calendar_news</id>
+            <name>Calendar Newsletter</name>
+            <route>calendar_news.page.index</route>
+            <icon>app.min.svg</icon>
+            <order>10</order>
+        </navigation>
+    </navigations>
 </info>
