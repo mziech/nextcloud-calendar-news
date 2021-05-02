@@ -1,7 +1,7 @@
 
 var app = angular.module("CalendarNews", ["ngRoute"]);
 
-app.config(function($httpProvider, $routeProvider) {
+app.config(function ($httpProvider, $routeProvider) {
     // Always send the CSRF token by default
     $httpProvider.defaults.headers.common.requesttoken = oc_requesttoken;
 
@@ -15,7 +15,7 @@ app.config(function($httpProvider, $routeProvider) {
             templateUrl: 'schedule.html'
         })
         .otherwise({
-            redirectTo:'/content'
+            redirectTo: '/content'
         });
 });
 
@@ -29,13 +29,22 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
         $http.get("schedule").then(function (xhr) {
             $scope.schedule = xhr.data.schedule;
             $scope.schedule.repeatTime = new Date($scope.schedule.repeatTime);
+            $scope.lastExecutionTime = xhr.data.lastExecutionTime;
             $scope.nextExecutionTime = xhr.data.nextExecutionTime;
+            $scope.previewNextExecutionTime = xhr.data.nextExecutionTime;
             $scope.scheduleForm.$setPristine();
         }, function () {
             OC.Notification.showTemporary(t("calendar_news", "Failed to load schedule"), {type: "error"});
         });
     }
+
     load();
+
+    $scope.$watch("schedule", function () {
+        $http.post("schedule/preview", {schedule: $scope.schedule}).then(function (xhr) {
+            $scope.previewNextExecutionTime = xhr.data.nextExecutionTime;
+        });
+    }, true);
 
     $scope.save = function () {
         $http.post("schedule", {schedule: $scope.schedule}).then(function () {
@@ -156,7 +165,7 @@ app.controller("ConfigController", function ($rootScope, $scope, $http) {
         $rootScope.updatePreview();
     }, true);
 
-    $scope.save = function() {
+    $scope.save = function () {
         $http.post("config", {sections: $rootScope.sections}).then(function () {
             OC.Notification.showTemporary(t("calendar_news", "Configuration successfully saved"));
         }, function () {

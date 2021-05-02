@@ -7,7 +7,7 @@
     <form name="scheduleForm" ng-submit="save()">
         <div>
             <label>
-                <?php p($l->t("Receipients:")); ?>
+                <?php p($l->t("Recipients:")); ?>
                 <input type="email" ng-model="emailToAdd" ng-keydown="addEmail($event);">
             </label>
             <div class="element-badge" ng-repeat="email in schedule.emails">
@@ -21,6 +21,11 @@
             <button type="button" ng-click="sendNow()" ng-disabled="scheduleForm.$dirty"><?php p($l->t("Send now")); ?></button>
         </div>
         <div>
+            <?php p($l->t("Last execution time:")); ?><br>
+            <span ng-if="lastExecutionTime">{{lastExecutionTime|date:"medium"}}</span>
+            <span ng-if="lastExecutionTime === null"><?php p($l->t("never")); ?></span>
+        </div>
+        <div>
             <label>
                 <?php p($l->t("Subject:")); ?>
                 <input ng-model="schedule.subject">
@@ -29,10 +34,50 @@
                 <?php p($l->t("Interval:")); ?>
                 <select ng-model="schedule.repeatInterval">
                     <option value="off"><?php p($l->t("Off")); ?></option>
+                    <option value="daily"><?php p($l->t("Daily")); ?></option>
                     <option value="weekly"><?php p($l->t("Weekly")); ?></option>
+                    <option value="monthly"><?php p($l->t("Monthly (fixed weekday)")); ?></option>
+                    <option value="monthly_dom"><?php p($l->t("Monthly (fixed day of month)")); ?></option>
+                    <option value="yearly"><?php p($l->t("Yearly (fixed weekday)")); ?></option>
+                    <option value="yearly_dom"><?php p($l->t("Yearly (fixed day of month)")); ?></option>
                 </select>
             </label>
-            <label ng-if="schedule.repeatInterval == 'weekly'">
+            <label>
+                <?php p($l->t("Skip executions:")); ?>
+                <input ng-model="schedule.skip" type="number" min="0"/>
+            </label>
+            <label ng-if="schedule.repeatInterval == 'yearly' || schedule.repeatInterval == 'yearly_dom'">
+                <?php p($l->t("Month:")); ?>
+                <select ng-model="schedule.repeatMonth">
+                    <option value="January"><?php p($l->t("January")); ?></option>
+                    <option value="February"><?php p($l->t("February")); ?></option>
+                    <option value="March"><?php p($l->t("March")); ?></option>
+                    <option value="April"><?php p($l->t("April")); ?></option>
+                    <option value="May"><?php p($l->t("May")); ?></option>
+                    <option value="June"><?php p($l->t("June")); ?></option>
+                    <option value="July"><?php p($l->t("July")); ?></option>
+                    <option value="August"><?php p($l->t("August")); ?></option>
+                    <option value="September"><?php p($l->t("September")); ?></option>
+                    <option value="October"><?php p($l->t("October")); ?></option>
+                    <option value="November"><?php p($l->t("November")); ?></option>
+                    <option value="December"><?php p($l->t("December")); ?></option>
+                </select>
+            </label>
+            <label ng-if="schedule.repeatInterval == 'monthly' || schedule.repeatInterval == 'yearly'">
+                <?php p($l->t("Week of month:")); ?>
+                <select ng-model="schedule.repeatWeek">
+                    <option value="next"><?php p($l->t("First")); ?></option>
+                    <option value="second"><?php p($l->t("Second")); ?></option>
+                    <option value="third"><?php p($l->t("Third")); ?></option>
+                    <option value="fourth"><?php p($l->t("Fourth")); ?></option>
+                    <option value="fifth"><?php p($l->t("Fifth")); ?></option>
+                </select>
+            </label>
+            <label ng-if="schedule.repeatInterval == 'monthly_dom' || schedule.repeatInterval == 'yearly_dom'">
+                <?php p($l->t("Day of month: (zero and negative values refer to days before end of month)")); ?>
+                <input ng-model="schedule.repeatDayOfMonth" type="number" min="-31" max="31"/>
+            </label>
+            <label ng-if="schedule.repeatInterval == 'weekly' || schedule.repeatInterval == 'monthly' || schedule.repeatInterval == 'yearly'">
                 <?php p($l->t("Weekday:")); ?>
                 <select ng-model="schedule.repeatWeekday">
                     <option value="monday"><?php p($l->t("Monday")); ?></option>
@@ -50,7 +95,10 @@
             </label>
             <div>
                 <?php p($l->t("Next execution time:")); ?><br>
-                {{nextExecutionTime|date:"medium"}}
+                <span ng-if="nextExecutionTime !== previewNextExecutionTime" style="text-decoration: line-through">
+                    {{nextExecutionTime|date:"medium"}}
+                </span>
+                {{previewNextExecutionTime|date:"medium"}}
             </div>
         </div>
         <button type="submit" ng-disabled="!scheduleForm.$dirty"><?php p($l->t("Save schedule")); ?></button>

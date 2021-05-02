@@ -39,6 +39,7 @@ sub crawlFiles{
 	foreach my $i ( @files ){
 		next if substr( $i, 0, 1 ) eq '.';
 		next if $i eq 'l10n';
+		next if $i eq 'node_modules';
 
 		if( -d $dir.'/'.$i ){
 			push( @found, crawlFiles( $dir.'/'.$i ));

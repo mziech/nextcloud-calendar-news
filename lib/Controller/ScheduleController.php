@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Marco Ziech <marco+nc@ziech.net>
+ * @copyright Copyright (c) 2020-2021 Marco Ziech <marco+nc@ziech.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -20,18 +20,15 @@
  */
 namespace OCA\CalendarNews\Controller;
 
-use OCA\CalendarNews\Service\NewsletterService;
+use OCA\Activity\Data;
 use OCA\CalendarNews\Service\ScheduleService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class ScheduleController extends Controller {
-    private $userId;
-    /**
-     * @var NewsletterService
-     */
-    private $newsletterService;
     /**
      * @var ScheduleService
      */
@@ -40,40 +37,78 @@ class ScheduleController extends Controller {
     public function __construct(
         $AppName,
         IRequest $request,
-        $UserId,
-        NewsletterService $newsletterService,
         ScheduleService $scheduleService
     ) {
         parent::__construct($AppName, $request);
-        $this->userId = $UserId;
-        $this->newsletterService = $newsletterService;
         $this->scheduleService = $scheduleService;
     }
 
-    /**
-     * @return JSONResponse
-     */
-    public function get() {
+    public function get(): JSONResponse {
         $schedule = $this->scheduleService->load();
+        $last = $this->scheduleService->getLastExecutionTime();
         $next = $this->scheduleService->getNextExecutionTime();
-        $schedule["nextExecutionTime"] = $next == null ? null : $next->format(\DateTime::ISO8601);
+        $schedule["lastExecutionTime"] = $last == null ? null : $last->format(\DateTimeInterface::ISO8601);
+        $schedule["nextExecutionTime"] = $next == null ? null : $next->format(\DateTimeInterface::ISO8601);
         return new JSONResponse($schedule);
     }
 
-    /**
-     * @return JSONResponse
-     */
-    public function post() {
-        $this->scheduleService->save($this->request->post);
+    public function post(): JSONResponse {
+        return $this->sanitizeDto(function ($dto) {
+            $this->scheduleService->save($dto);
+            return new JSONResponse(["success" => true]);
+        });
+    }
+
+    public function previewNext(): JSONResponse {
+        return $this->sanitizeDto(function ($dto) {
+            $nextExecutionTime = $this->scheduleService->getNextExecutionTime($dto["schedule"]);
+            return new JSONResponse([
+                "nextExecutionTime" => $nextExecutionTime != null
+                    ? $nextExecutionTime->format(\DateTimeInterface::ISO8601)
+                    : null
+            ]);
+        });
+    }
+
+    public function sendNow(): JSONResponse {
+        $this->scheduleService->sendNow();
         return new JSONResponse(["success" => true]);
     }
 
-    /**
-     * @return JSONResponse
-     */
-    public function sendNow() {
-        $this->scheduleService->sendNow();
-        return new JSONResponse(["success" => true]);
+    private function sanitizeDto(\Closure $closure): JSONResponse {
+        try {
+            $schedule = $this->request->post["schedule"];
+            $dto = [];
+            $dto["emails"] = $schedule["emails"];
+            $dto["subject"] = ValidationException::onBlank($schedule["subject"]);
+            $dto["repeatInterval"] = ValidationException::onValueNotInList($schedule["repeatInterval"], [
+                "off", "daily", "weekly", "monthly", "monthly_dom", "yearly", "yearly_dom"
+            ]);
+            $dto["skip"] = ValidationException::onNumberOutOfRange($schedule["skip"], 0, PHP_INT_MAX);
+            if (in_array($dto["repeatInterval"], ["yearly", "yearly_dom"])) {
+                $dto["repeatMonth"] = ValidationException::onValueNotInList($schedule["repeatMonth"], [
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ]);
+            }
+            if (in_array($dto["repeatInterval"], ["yearly", "monthly"])) {
+                $dto["repeatWeek"] = ValidationException::onValueNotInList($schedule["repeatWeek"], [
+                    "next", "second", "third", "fourth", "fifth"
+                ]);
+            }
+            if (in_array($dto["repeatInterval"], ["yearly_dom", "monthly_dom"])) {
+                $dto["repeatDayOfMonth"] = ValidationException::onNumberOutOfRange($schedule["repeatDayOfMonth"], -31, 31);
+            }
+            if (in_array($dto["repeatInterval"], ["yearly", "monthly", "weekly"])) {
+                $dto["repeatWeekday"] = ValidationException::onValueNotInList($schedule["repeatWeekday"], [
+                    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+                ]);
+            }
+            $dto["repeatTime"] = ValidationException::onBlank($schedule["repeatTime"]);
+            return $closure(["schedule" => $dto]);
+        } catch (ValidationException $e) {
+            return new JSONResponse(["error"=>"invalid"], Http::STATUS_BAD_REQUEST);
+        }
     }
 
 }

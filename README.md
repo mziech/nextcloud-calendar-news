@@ -3,6 +3,10 @@
 # Calendar Newsletter
 A Nextcloud App to send a frequent newsletter based on one or multiple calendars e.g. to a mail distribution list.
 
+## Requirements
+* PHP 7.3 or later
+* Nextcloud 20
+
 ## Install
 This is an experimental app which needs to be installed manually.
 
