@@ -43,10 +43,29 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
     $scope.$watch("schedule", function () {
         $http.post("schedule/preview", {schedule: $scope.schedule}).then(function (xhr) {
             $scope.previewNextExecutionTime = xhr.data.nextExecutionTime;
+        }, function () {
+            $scope.previewNextExecutionTime = null;
         });
     }, true);
 
+    function parseEmail() {
+        var parts = $scope.emailToAdd.split(/[,;|\/ ]+/);
+        for (var i in parts) {
+            var email = parts[i].trim();
+            if (!$scope.schedule.emails) {
+                $scope.schedule.emails = [];
+            }
+            if (email !== "" && $scope.schedule.emails.indexOf(email) < 0) {
+                $scope.schedule.emails.push(email);
+            }
+        }
+        $scope.emailToAdd = "";
+    }
+
     $scope.save = function () {
+        if ($scope.emailToAdd) {
+            parseEmail();
+        }
         $http.post("schedule", {schedule: $scope.schedule}).then(function () {
             OC.Notification.showTemporary(t("calendar_news", "Configuration successfully saved"));
             load();
@@ -65,6 +84,14 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
         }
     };
 
+    $scope.removeLast = function () {
+        $http.post("remove-last").then(function () {
+            $scope.lastExecutionTime = null;
+        }, function () {
+            OC.Notification.showTemporary(t("calendar_news", "Failed to remove last execution timestamp"), {type: "error"});
+        });
+    };
+
     $scope.removeEmail = function (email) {
         var pos = $scope.schedule.emails.indexOf(email);
         if (pos >= 0) {
@@ -79,17 +106,7 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
             if (!$scope.emailToAdd) {
                 return false;
             }
-            var parts = $scope.emailToAdd.split(/[,;|\/ ]+/);
-            for (var i in parts) {
-                var email = parts[i].trim();
-                if (!$scope.schedule.emails) {
-                    $scope.schedule.emails = [];
-                }
-                if (email !== "" && $scope.schedule.emails.indexOf(email) < 0) {
-                    $scope.schedule.emails.push(email);
-                }
-            }
-            $scope.emailToAdd = "";
+            parseEmail();
             return false;
         }
     };

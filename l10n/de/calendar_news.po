@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud Core 8.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2021-05-02 01:52+0200\n"
-"PO-Revision-Date: 2021-05-02 01:59+0200\n"
+"POT-Creation-Date: 2021-05-03 01:27+0200\n"
+"PO-Revision-Date: 2021-05-03 01:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
@@ -22,25 +22,29 @@ msgstr ""
 msgid "Failed to load schedule"
 msgstr "Fehler beim Laden der Planung"
 
-#: js/script.js:51 js/script.js:170
+#: js/script.js:70 js/script.js:187
 msgid "Configuration successfully saved"
 msgstr "Konfiguration erfolgreich gespeichert"
 
-#: js/script.js:54 js/script.js:172
+#: js/script.js:73 js/script.js:189
 msgid "Failed to save configuration"
 msgstr "Fehler beim Speichern der Konfiguration"
 
-#: js/script.js:59
+#: js/script.js:78
 msgid "Really send the newsletter NOW to all receipients?"
 msgstr "Den Newsletter wirklich JETZT an alle Empfänger schicken?"
 
-#: js/script.js:61
+#: js/script.js:80
 msgid "Newsletter sent"
 msgstr "Newsletter gesendet"
 
-#: js/script.js:63
+#: js/script.js:82
 msgid "Failed to send newsletter"
 msgstr "Fehler beim Senden des Newsletters"
+
+#: js/script.js:91
+msgid "Failed to remove last execution timestamp"
+msgstr "Fehler beim Löschen des letzten Ausführungszeitpunkts"
 
 #: templates/content/index.php:5
 msgid "Schedule Newsletter"
@@ -58,247 +62,247 @@ msgstr "Jetzt senden"
 msgid "Last execution time:"
 msgstr "Letzter Ausführungszeitpunkt:"
 
-#: templates/content/index.php:26
+#: templates/content/index.php:29
 msgid "never"
 msgstr "Nie"
 
-#: templates/content/index.php:30
+#: templates/content/index.php:33
 msgid "Subject:"
 msgstr "Betreff:"
 
-#: templates/content/index.php:34
+#: templates/content/index.php:37
 msgid "Interval:"
 msgstr "Intervall:"
 
-#: templates/content/index.php:36
+#: templates/content/index.php:39
 msgid "Off"
 msgstr "Aus"
 
-#: templates/content/index.php:37
+#: templates/content/index.php:40
 msgid "Daily"
 msgstr "Täglich"
 
-#: templates/content/index.php:38
+#: templates/content/index.php:41
 msgid "Weekly"
 msgstr "Wöchentlich"
 
-#: templates/content/index.php:39
+#: templates/content/index.php:42
 msgid "Monthly (fixed weekday)"
 msgstr "Monatlich (bestimmter Wochentag)"
 
-#: templates/content/index.php:40
+#: templates/content/index.php:43
 msgid "Monthly (fixed day of month)"
 msgstr "Monatlich (bestimmter Tag des Monats)"
 
-#: templates/content/index.php:41
+#: templates/content/index.php:44
 msgid "Yearly (fixed weekday)"
 msgstr "Jährlich (bestimmter Wochentag)"
 
-#: templates/content/index.php:42
+#: templates/content/index.php:45
 msgid "Yearly (fixed day of month)"
 msgstr "Jährlich (bestimmtes Datum)"
 
-#: templates/content/index.php:46
+#: templates/content/index.php:49
 msgid "Skip executions:"
 msgstr ""
 "Zu überspringende Ausführungen: (z.B. 1 für eine Ausführung alle 2 Wochen)"
 
-#: templates/content/index.php:50
+#: templates/content/index.php:53
 msgid "Month:"
 msgstr "Monat:"
 
-#: templates/content/index.php:52
+#: templates/content/index.php:55
 msgid "January"
 msgstr "Januar"
 
-#: templates/content/index.php:53
+#: templates/content/index.php:56
 msgid "February"
 msgstr "Februar"
 
-#: templates/content/index.php:54
+#: templates/content/index.php:57
 msgid "March"
 msgstr "März"
 
-#: templates/content/index.php:55
+#: templates/content/index.php:58
 msgid "April"
 msgstr "April"
 
-#: templates/content/index.php:56
+#: templates/content/index.php:59
 msgid "May"
 msgstr "Mai"
 
-#: templates/content/index.php:57
+#: templates/content/index.php:60
 msgid "June"
 msgstr "Juni"
 
-#: templates/content/index.php:58
+#: templates/content/index.php:61
 msgid "July"
 msgstr "Juli"
 
-#: templates/content/index.php:59
+#: templates/content/index.php:62
 msgid "August"
 msgstr "August"
 
-#: templates/content/index.php:60
+#: templates/content/index.php:63
 msgid "September"
 msgstr "September"
 
-#: templates/content/index.php:61
+#: templates/content/index.php:64
 msgid "October"
 msgstr "Oktober"
 
-#: templates/content/index.php:62
+#: templates/content/index.php:65
 msgid "November"
 msgstr "November"
 
-#: templates/content/index.php:63
+#: templates/content/index.php:66
 msgid "December"
 msgstr "Dezember"
 
-#: templates/content/index.php:67
+#: templates/content/index.php:70
 msgid "Week of month:"
 msgstr "Woche des Monats:"
 
-#: templates/content/index.php:69
+#: templates/content/index.php:72
 msgid "First"
 msgstr "Erste"
 
-#: templates/content/index.php:70
+#: templates/content/index.php:73
 msgid "Second"
 msgstr "Zweite"
 
-#: templates/content/index.php:71
+#: templates/content/index.php:74
 msgid "Third"
 msgstr "Dritte"
 
-#: templates/content/index.php:72
+#: templates/content/index.php:75
 msgid "Fourth"
 msgstr "Vierte"
 
-#: templates/content/index.php:73
+#: templates/content/index.php:76
 msgid "Fifth"
 msgstr "Fünfte"
 
-#: templates/content/index.php:77
+#: templates/content/index.php:80
 msgid ""
 "Day of month: (zero and negative values refer to days before end of month)"
 msgstr ""
 "Tag des Monats: (Werte, die kleiner oder gleich 0 sind, beziehen sich auf "
 "Tage vor Monatsende)"
 
-#: templates/content/index.php:81
+#: templates/content/index.php:84
 msgid "Weekday:"
 msgstr "Wochentag:"
 
-#: templates/content/index.php:83
+#: templates/content/index.php:86
 msgid "Monday"
 msgstr "Montag"
 
-#: templates/content/index.php:84
+#: templates/content/index.php:87
 msgid "Tuesday"
 msgstr "Dienstag"
 
-#: templates/content/index.php:85
+#: templates/content/index.php:88
 msgid "Wednesday"
 msgstr "Mittwoch"
 
-#: templates/content/index.php:86
+#: templates/content/index.php:89
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: templates/content/index.php:87
+#: templates/content/index.php:90
 msgid "Friday"
 msgstr "Freitag"
 
-#: templates/content/index.php:88
+#: templates/content/index.php:91
 msgid "Saturday"
 msgstr "Samstag"
 
-#: templates/content/index.php:89
+#: templates/content/index.php:92
 msgid "Sunday"
 msgstr "Sonntag"
 
-#: templates/content/index.php:93
+#: templates/content/index.php:96
 msgid "Time:"
 msgstr "Zeit:"
 
-#: templates/content/index.php:97
+#: templates/content/index.php:100
 msgid "Next execution time:"
 msgstr "Nächster Ausführungszeitpunkt:"
 
-#: templates/content/index.php:104
+#: templates/content/index.php:107
 msgid "Save schedule"
 msgstr "Planung speichern"
 
-#: templates/content/index.php:110
+#: templates/content/index.php:113
 msgid "Configure Newsletter"
 msgstr "Newsletter Konfigurieren"
 
-#: templates/content/index.php:114
+#: templates/content/index.php:117
 msgid "Section"
 msgstr "Abschnitt"
 
-#: templates/content/index.php:121
+#: templates/content/index.php:124
 msgid "Section Type:"
 msgstr "Abschnittsart:"
 
-#: templates/content/index.php:123
+#: templates/content/index.php:126
 msgid "Calendar"
 msgstr "Kalender"
 
-#: templates/content/index.php:124 templates/content/index.php:202
+#: templates/content/index.php:127 templates/content/index.php:205
 msgid "Text"
 msgstr "Text"
 
-#: templates/content/index.php:125
+#: templates/content/index.php:128
 msgid "Heading"
 msgstr "Überschrift"
 
-#: templates/content/index.php:131
+#: templates/content/index.php:134
 msgid "Heading:"
 msgstr "Überschrift:"
 
-#: templates/content/index.php:138
+#: templates/content/index.php:141
 msgid "Calendars:"
 msgstr "Kalender:"
 
-#: templates/content/index.php:154
+#: templates/content/index.php:157
 msgid "Delay until start of entries:"
 msgstr "Zeitspanne bis zum ersten Eintrag:"
 
-#: templates/content/index.php:158
+#: templates/content/index.php:161
 msgid "Time range until last entry:"
 msgstr "Zeitspanne bis zum letzten Eintrag:"
 
-#: templates/content/index.php:164
+#: templates/content/index.php:167
 msgid "Format of first line:"
 msgstr "Format der ersten Zeile:"
 
-#: templates/content/index.php:170
+#: templates/content/index.php:173
 msgid "Format of second line:"
 msgstr "Format der zweiten Zeile:"
 
-#: templates/content/index.php:176
+#: templates/content/index.php:179
 msgid "Description Regex:"
 msgstr "Regulärer Ausdruck für Beschreibung:"
 
-#: templates/content/index.php:183
+#: templates/content/index.php:186
 msgid "Text:"
 msgstr "Text:"
 
-#: templates/content/index.php:188
+#: templates/content/index.php:191
 msgid "Add Section"
 msgstr "Abschnitt hinzufügen"
 
-#: templates/content/index.php:189
+#: templates/content/index.php:192
 msgid "Save configuration"
 msgstr "Konfiguration speichern"
 
-#: templates/content/index.php:198
+#: templates/content/index.php:201
 msgid "HTML"
 msgstr "HTML"
 
-#: templates/content/index.php:207
+#: templates/content/index.php:210
 msgid "Refresh preview"
 msgstr "Vorschau aktualisieren"
 

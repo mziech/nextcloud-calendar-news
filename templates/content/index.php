@@ -22,7 +22,10 @@
         </div>
         <div>
             <?php p($l->t("Last execution time:")); ?><br>
-            <span ng-if="lastExecutionTime">{{lastExecutionTime|date:"medium"}}</span>
+            <span ng-if="lastExecutionTime">
+                {{lastExecutionTime|date:"medium"}}
+                <button type="button" class="icon icon-delete" ng-click="removeLast()"></button>
+            </span>
             <span ng-if="lastExecutionTime === null"><?php p($l->t("never")); ?></span>
         </div>
         <div>

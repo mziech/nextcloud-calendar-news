@@ -27,7 +27,6 @@ style('calendar_news', 'style');
 <div id="app" ng-app="CalendarNews">
 	<div id="app-navigation">
 		<?php print_unescaped($this->inc('navigation/index')); ?>
-		<?php print_unescaped($this->inc('settings/index')); ?>
 	</div>
 
 	<div id="app-content">

@@ -18,6 +18,7 @@ return [
         ['name' => 'config#get', 'url' => '/config', 'verb' => 'GET'],
         ['name' => 'config#post', 'url' => '/config', 'verb' => 'POST'],
         ['name' => 'schedule#sendNow', 'url' => '/send-now', 'verb' => 'POST'],
+        ['name' => 'schedule#removeLast', 'url' => '/remove-last', 'verb' => 'POST'],
         ['name' => 'schedule#get', 'url' => '/schedule', 'verb' => 'GET'],
         ['name' => 'schedule#previewNext', 'url' => '/schedule/preview', 'verb' => 'POST'],
         ['name' => 'schedule#post', 'url' => '/schedule', 'verb' => 'POST'],

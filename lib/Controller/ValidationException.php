@@ -24,12 +24,23 @@ namespace OCA\CalendarNews\Controller;
 
 class ValidationException extends \Exception {
 
+    private $errors;
+
+    public function __construct(array $errors) {
+        $this->errors = $errors;
+    }
+
+    public function getErrors(): array {
+        return $this->errors;
+    }
+
     /**
      * @throws ValidationException if the value is a blank string or null
      */
-    public static function onBlank($s) {
+    public static function onBlank($dto, $key) {
+        $s = self::onMissing($dto, $key);
         if ($s === null || trim($s) === "") {
-            throw new ValidationException();
+            throw new ValidationException([$key => "not-blank"]);
         }
         return $s;
     }
@@ -37,9 +48,10 @@ class ValidationException extends \Exception {
     /**
      * @throws ValidationException if the value is out of range
      */
-    public static function onNumberOutOfRange($n, int $low, int $high) {
+    public static function onNumberOutOfRange($dto, $key, int $low, int $high) {
+        $n = self::onMissing($dto, $key);
         if ($n !== intval($n) || $n < $low || $n > $high) {
-            throw new ValidationException();
+            throw new ValidationException([$key => "value-range"]);
         }
         return intval($n);
     }
@@ -47,10 +59,22 @@ class ValidationException extends \Exception {
     /**
      * @throws ValidationException if the value is not in the allowed list of values
      */
-    public static function onValueNotInList($s, array $allowed) {
+    public static function onValueNotInList($dto, $key, array $allowed) {
+        $s = self::onMissing($dto, $key);
         if (!in_array($s, $allowed)) {
-            throw new ValidationException();
+            throw new ValidationException([$key => "value-in"]);
         }
+        return $s;
+    }
+
+    /**
+     * @throws ValidationException if the given key is missing from the DTO
+     */
+    private static function onMissing($dto, $key) {
+        if (!isset($dto[$key])) {
+            throw new ValidationException([$key => "required"]);
+        }
+        $s = $dto[$key];
         return $s;
     }
 

@@ -20,11 +20,9 @@
  */
 namespace OCA\CalendarNews\Controller;
 
-use OCA\Activity\Data;
 use OCA\CalendarNews\Service\ScheduleService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
@@ -70,6 +68,11 @@ class ScheduleController extends Controller {
         });
     }
 
+    public function removeLast(): JSONResponse {
+        $this->scheduleService->removeLastExecutionTime();
+        return new JSONResponse(["success" => true]);
+    }
+
     public function sendNow(): JSONResponse {
         $this->scheduleService->sendNow();
         return new JSONResponse(["success" => true]);
@@ -80,34 +83,34 @@ class ScheduleController extends Controller {
             $schedule = $this->request->post["schedule"];
             $dto = [];
             $dto["emails"] = $schedule["emails"];
-            $dto["subject"] = ValidationException::onBlank($schedule["subject"]);
-            $dto["repeatInterval"] = ValidationException::onValueNotInList($schedule["repeatInterval"], [
+            $dto["subject"] = ValidationException::onBlank($schedule, "subject");
+            $dto["repeatInterval"] = ValidationException::onValueNotInList($schedule, "repeatInterval", [
                 "off", "daily", "weekly", "monthly", "monthly_dom", "yearly", "yearly_dom"
             ]);
-            $dto["skip"] = ValidationException::onNumberOutOfRange($schedule["skip"], 0, PHP_INT_MAX);
+            $dto["skip"] = ValidationException::onNumberOutOfRange($schedule, "skip", 0, PHP_INT_MAX);
             if (in_array($dto["repeatInterval"], ["yearly", "yearly_dom"])) {
-                $dto["repeatMonth"] = ValidationException::onValueNotInList($schedule["repeatMonth"], [
+                $dto["repeatMonth"] = ValidationException::onValueNotInList($schedule, "repeatMonth", [
                     "January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ]);
             }
             if (in_array($dto["repeatInterval"], ["yearly", "monthly"])) {
-                $dto["repeatWeek"] = ValidationException::onValueNotInList($schedule["repeatWeek"], [
+                $dto["repeatWeek"] = ValidationException::onValueNotInList($schedule, "repeatWeek", [
                     "next", "second", "third", "fourth", "fifth"
                 ]);
             }
             if (in_array($dto["repeatInterval"], ["yearly_dom", "monthly_dom"])) {
-                $dto["repeatDayOfMonth"] = ValidationException::onNumberOutOfRange($schedule["repeatDayOfMonth"], -31, 31);
+                $dto["repeatDayOfMonth"] = ValidationException::onNumberOutOfRange($schedule, "repeatDayOfMonth", -31, 31);
             }
             if (in_array($dto["repeatInterval"], ["yearly", "monthly", "weekly"])) {
-                $dto["repeatWeekday"] = ValidationException::onValueNotInList($schedule["repeatWeekday"], [
+                $dto["repeatWeekday"] = ValidationException::onValueNotInList($schedule, "repeatWeekday", [
                     "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
                 ]);
             }
-            $dto["repeatTime"] = ValidationException::onBlank($schedule["repeatTime"]);
+            $dto["repeatTime"] = ValidationException::onBlank($schedule, "repeatTime");
             return $closure(["schedule" => $dto]);
         } catch (ValidationException $e) {
-            return new JSONResponse(["error"=>"invalid"], Http::STATUS_BAD_REQUEST);
+            return new JSONResponse($e->getErrors(), Http::STATUS_BAD_REQUEST);
         }
     }
 

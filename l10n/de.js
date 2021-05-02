@@ -7,6 +7,7 @@ OC.L10N.register(
     "Really send the newsletter NOW to all receipients?" : "Den Newsletter wirklich JETZT an alle Empfänger schicken?",
     "Newsletter sent" : "Newsletter gesendet",
     "Failed to send newsletter" : "Fehler beim Senden des Newsletters",
+    "Failed to remove last execution timestamp" : "Fehler beim Löschen des letzten Ausführungszeitpunkts",
     "Schedule Newsletter" : "Newsletter Planen",
     "Recipients:" : "Empfänger:",
     "Send now" : "Jetzt senden",

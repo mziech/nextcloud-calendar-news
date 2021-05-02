@@ -86,6 +86,10 @@ class ScheduleService {
         $this->config->setAppValue($this->AppName, "schedule.lastExecutionTime", $t->format(\DateTimeInterface::ISO8601));
     }
 
+    public function removeLastExecutionTime() {
+        $this->config->setAppValue($this->AppName, "schedule.lastExecutionTime", null);
+    }
+
     public function getNextExecutionTime($schedule=null) {
         if ($schedule == null) {
             $schedule = $this->load()["schedule"];
@@ -97,7 +101,6 @@ class ScheduleService {
         }
         $t->setTimezone(new \DateTimeZone("Europe/Berlin"));
         $rt = \DateTime::createFromFormat("Y-m-d\\TH:i:s.uO", $schedule["repeatTime"]);
-        $t->modify($rt->format("H:i"));
         switch ($schedule["repeatInterval"]) {
             case "yearly":
                 if ($schedule["skip"]) {
@@ -106,7 +109,7 @@ class ScheduleService {
                 $t->modify("1 year");
                 $t->modify($schedule["repeatWeek"] . " " . $schedule["repeatWeekday"]
                     . " of " . $schedule["repeatMonth"]);
-                return $t;
+                break;
             case "yearly_dom":
                 if ($schedule["skip"]) {
                     $t->modify($schedule["skip"] . " years");
@@ -117,14 +120,14 @@ class ScheduleService {
                 if ($schedule["repeatDayOfMonth"] !== 0) {
                     $t->modify(($schedule["repeatDayOfMonth"] - 1) . " days");
                 }
-                return $t;
+                break;
             case "monthly":
                 if ($schedule["skip"]) {
                     $t->modify($schedule["skip"] . " months");
                 }
                 $t->modify($schedule["repeatWeek"] . " " . $schedule["repeatWeekday"]
                     . " of next month");
-                return $t;
+                break;
             case "monthly_dom":
                 if ($schedule["skip"]) {
                     $t->modify($schedule["skip"] . " months");
@@ -133,23 +136,25 @@ class ScheduleService {
                 if ($schedule["repeatDayOfMonth"] !== 0) {
                     $t->modify(($schedule["repeatDayOfMonth"] - 1) . " days");
                 }
-                return $t;
+                break;
             case "weekly":
                 if ($schedule["skip"]) {
                     $t->modify($schedule["skip"] . " weeks");
                 }
                 $t->modify("next " . $schedule["repeatWeekday"]);
-                return $t;
+                break;
             case "daily":
                 if ($schedule["skip"]) {
                     $t->modify($schedule["skip"] . " days");
                 }
                 $t->modify("tomorrow");
-                return $t;
+                break;
             case "off":
             default:
                 return null;
         }
+        $t->modify($rt->format("H:i"));
+        return $t;
     }
 
 }
