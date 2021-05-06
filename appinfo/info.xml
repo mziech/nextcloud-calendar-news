@@ -5,7 +5,7 @@
     <name>Calendar Newsletter</name>
     <summary>Calendar-based Newsletter</summary>
     <description><![CDATA[This generates frequent e-mail newsletters based on selected calendars.]]></description>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <licence>agpl</licence>
     <author mail="marco+nc@ziech.net" homepage="https://github.com/mziech">Marco Ziech</author>
     <namespace>CalendarNews</namespace>
