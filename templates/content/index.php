@@ -141,7 +141,7 @@
                             <?php p($l->t("Calendars:")); ?>
                             <select ng-model="calendarToAdd[nr]"
                                     ng-change="addCalendar(nr)"
-                                    ng-options="calendar.displayName + ' (' + calendar.user + ')' for calendar in calendars track by calendar.id"></select>
+                                    ng-options="calendar.displayName for calendar in calendars track by calendar.id"></select>
                         </label>
                         <div class="calendar-badges">
                             <div class="calendar-badge" ng-repeat="id in section.calendar.ids">

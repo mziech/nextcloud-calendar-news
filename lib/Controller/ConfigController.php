@@ -22,12 +22,13 @@ namespace OCA\CalendarNews\Controller;
 
 
 use OC\AppFramework\Http;
-use OCA\CalendarNews\Service\CalendarService;
 use OCA\CalendarNews\Service\ConfigService;
 use OCA\CalendarNews\Service\NewsletterService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\Calendar\ICalendar;
+use OCP\Calendar\IManager;
 use OCP\IRequest;
 
 /**
@@ -36,8 +37,10 @@ use OCP\IRequest;
  * @package OCA\CalendarNews\Controller
  */
 class ConfigController extends Controller {
-    private $userId;
-    private $calendarService;
+    /**
+     * @var IManager
+     */
+    private $calendarManager;
     /**
      * @var ConfigService
      */
@@ -50,29 +53,26 @@ class ConfigController extends Controller {
     public function __construct(
         $AppName,
         IRequest $request,
-        $UserId,
-        CalendarService $calendarService,
+        IManager $calendarManager,
         ConfigService $configService,
         NewsletterService $newsletterService
     ) {
         parent::__construct($AppName, $request);
-        $this->userId = $UserId;
-        $this->calendarService = $calendarService;
         $this->configService = $configService;
         $this->newsletterService = $newsletterService;
+        $this->calendarManager = $calendarManager;
     }
 
     /**
      * @return JSONResponse
      */
     public function getCalendars() {
-        return new JSONResponse(array_map(function ($it) {
+        return new JSONResponse(array_map(function (ICalendar $it) {
             return [
-                "id" => $it["id"],
-                "displayName" => $it["displayName"],
-                "user" => array_values(array_slice(explode("/", $it["principaluri"]), -1))[0]
+                "id" => $it->getKey(),
+                "displayName" => $it->getDisplayName()
             ];
-        }, $this->calendarService->getAllCalendars()));
+        }, $this->calendarManager->getCalendars()));
     }
 
     /**

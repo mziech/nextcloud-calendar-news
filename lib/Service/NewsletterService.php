@@ -21,11 +21,11 @@
 namespace OCA\CalendarNews\Service;
 
 
+use OCP\Calendar\IManager;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Mail\IEMailTemplate;
 use OCP\Mail\IMailer;
-use Sabre\VObject\Component\VCalendar;
 
 class NewsletterService {
 
@@ -38,9 +38,9 @@ class NewsletterService {
      */
     private $mailer;
     /**
-     * @var CalendarService
+     * @var IManager
      */
-    private $calendarService;
+    private $calendarManager;
     /**
      * @var ILogger
      */
@@ -55,13 +55,13 @@ class NewsletterService {
      */
     private $tz;
 
-    function __construct(CalendarService $calendarService, ConfigService $configService, IMailer $mailer, ILogger $logger, IL10N $l10n) {
+    function __construct(IManager $calendarManager,  ConfigService $configService, IMailer $mailer, ILogger $logger, IL10N $l10n) {
         $this->configService = $configService;
         $this->mailer = $mailer;
-        $this->calendarService = $calendarService;
         $this->logger = $logger;
         $this->l10n = $l10n;
         $this->tz = new \DateTimeZone("Europe/Berlin");
+        $this->calendarManager = $calendarManager;
     }
 
     private function buildTemplate(array $config) {
@@ -126,14 +126,31 @@ class NewsletterService {
             $now = $this->now($config);
             $timeRange["end"] = $now->add(new \DateInterval($section["calendar"]["end"]));
         }
-        $items = $this->calendarService->getCalendarObjects($section["calendar"]["ids"], $timeRange);
+        $items = $this->searchCalendars($section["calendar"]["ids"], $timeRange);
         foreach ($items as $item) {
-            if ($item instanceof VCalendar) {
-                $this->addCalenderEvent($template, $item, $section);
-            }
+            $this->addCalenderEvent($template, $item, $section);
         }
         $template->addBodyButton('***', '',
             "\n===========================================================================\n");
+    }
+
+    function searchCalendars($ids, $timeRange) {
+        $items = [];
+        foreach ($this->calendarManager->getCalendars() as $calendar) {
+            if (in_array($calendar->getKey(), $ids)) {
+                $results = $calendar->search("", ["SUMMARY"], ["timerange" => $timeRange]);
+                foreach ($results as $result) {
+                    $items = array_merge($items, $result["objects"]);
+                }
+            }
+        }
+        usort($items, function ($a, $b) {
+            $astart = $a["DTSTART"][0];
+            $bstart = $b["DTSTART"][0];
+            return $astart->getTimestamp() - $bstart->getTimestamp();
+        });
+
+        return $items;
     }
 
     /**
@@ -143,11 +160,14 @@ class NewsletterService {
     private function addCalenderEvent(IEMailTemplate $template, $item, array $section) {
         $placeholders = [];
         date_default_timezone_set($this->tz->getName());
-        /** @var $t \DateTime */
-        $t = $item->VEVENT->DTSTART->getDateTime()->setTimezone($this->tz);
-        /** @var $tend \DateTime */
-        $tend = $item->VEVENT->DTEND->getDateTime()->setTimezone($this->tz);
-        $allDay = !$item->VEVENT->DTSTART->hasTime();
+        /** @var $t \DateTimeImmutable */
+        $t = $item["DTSTART"][0]->setTimezone($this->tz);
+        /** @var $tend \DateTimeImmutable */
+        $tend = $item["DTEND"][0]->setTimezone($this->tz);
+        $allDay = isset($item["DTSTART"][1]["VALUE"]); // TODO: really???
+        $description = $item["DESCRIPTION"][0];
+
+        $placeholders['summary'] = $item["SUMMARY"][0];
         $placeholders['startDate'] = strftime("%A, %d.%m.%Y", $t->getTimestamp());
         $placeholders['endDate'] = strftime("%A, %d.%m.%Y", $tend->getTimestamp());
         $tstr = strftime($allDay ? "%A, %d.%m.%Y" : "%A, %d.%m.%Y %R", $t->getTimestamp());
@@ -168,17 +188,16 @@ class NewsletterService {
         } else {
             $placeholders['dateRange'] = $placeholders['startDate'];
         }
-        $placeholders['summary'] = $item->VEVENT->SUMMARY;
-        $placeholders['description'] = $item->VEVENT->DESCRIPTION;
+        $placeholders['description'] = $description;
         if (isset($section["calendar"]["descriptionRegex"]) && !empty($section["calendar"]["descriptionRegex"])) {
             $matches = [];
-            if (preg_match($section["calendar"]["descriptionRegex"], $item->VEVENT->DESCRIPTION, $matches)) {
+            if (preg_match($section["calendar"]["descriptionRegex"], $description, $matches)) {
                 foreach ($matches as $k => $v) {
                     $placeholders["$k"] = $v;
                 }
             }
         }
-        $placeholders = array_merge($placeholders, $this->parseDescriptionItems($item->VEVENT->DESCRIPTION));
+        $placeholders = array_merge($placeholders, $this->parseDescriptionItems($description));
         $placeholders['*'] = json_encode($placeholders, JSON_PRETTY_PRINT);
         $line2 = $this->applyFormat($section["calendar"]["format2"], $placeholders);
         $line1 = $this->applyFormat($section["calendar"]["format1"], $placeholders);

@@ -121,7 +121,7 @@ app.controller("ConfigController", function ($rootScope, $scope, $http) {
     $http.get("calendars").then(function (xhr) {
         $scope.calendars = xhr.data;
         angular.forEach(xhr.data, function (cal) {
-            $scope.calendarDisplayNames[cal.id] = cal.displayName + " (" + cal.user + ")";
+            $scope.calendarDisplayNames[cal.id] = cal.displayName;
         });
     });
 
