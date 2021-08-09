@@ -16,7 +16,7 @@
     <bugs>https://github.com/mziech/nextcloud-calendar-news/issues</bugs>
     <dependencies>
         <owncloud min-version="10"/>
-        <nextcloud min-version="15" max-version="21"/>
+        <nextcloud min-version="15" max-version="22"/>
     </dependencies>
     <background-jobs>
         <job>OCA\CalendarNews\Job\MailJob</job>
