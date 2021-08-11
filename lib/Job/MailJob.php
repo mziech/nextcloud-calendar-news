@@ -23,7 +23,9 @@ namespace OCA\CalendarNews\Job;
 use OCA\CalendarNews\Service\ScheduleService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
-use OCP\ILogger;
+use OCP\IUserManager;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class MailJob extends TimedJob {
 
@@ -32,29 +34,65 @@ class MailJob extends TimedJob {
      */
     private $scheduleService;
     /**
-     * @var ILogger
+     * @var IUserManager
+     */
+    private $userManager;
+    /**
+     * @var IUserSession
+     */
+    private $userSession;
+    /**
+     * @var LoggerInterface
      */
     private $logger;
 
-    function __construct(ITimeFactory $time, ScheduleService $scheduleService, ILogger $logger) {
+    function __construct(
+        ITimeFactory $time,
+        IUserManager $userManager,
+        IUserSession $userSession,
+        ScheduleService $scheduleService,
+        LoggerInterface $logger
+    ) {
         parent::__construct($time);
         parent::setInterval(20 * 60 /* s */);
         $this->scheduleService = $scheduleService;
         $this->logger = $logger;
+        $this->userManager = $userManager;
+        $this->userSession = $userSession;
     }
 
     protected function run($argument) {
-        $next = $this->scheduleService->getNextExecutionTime();
-        if ($next == null) {
-            return;
-        }
-        $now = new \DateTime();
+        $oldUser = $this->userSession->getUser();
+        try {
+            $next = $this->scheduleService->getNextExecutionTime();
+            if ($next == null) {
+                return;
+            }
+            $now = new \DateTime();
 
-        if ($next < $now) {
-            $this->logger->info("Sending newsletter is due: {$next->format("c")} < {$now->format("c")}");
-            $this->scheduleService->setLastExecutionTime($now);
-            $this->scheduleService->sendNow();
+            if ($next < $now) {
+                $this->findSuitableUser();
+
+                $this->logger->info("Sending newsletter is due: {$next->format("c")} < {$now->format("c")}");
+                $this->scheduleService->setLastExecutionTime($now);
+                $this->scheduleService->sendNow();
+            }
+        } finally {
+            $this->userSession->setUser($oldUser);
         }
+    }
+
+    // TODO: make newsletter config user-specific so we don't need this ugly hack *sigh*
+    private function findSuitableUser(): void {
+        foreach ($this->userManager->search("") as $user) {
+            $this->userSession->setUser($user);
+            // just find first user with access to all required calendars, it doesn't really matter
+            if ($this->scheduleService->isSuitableUser()) {
+                $this->logger->info("Sending newsletter as user: {$user->getUID()}");
+                return;
+            }
+        }
+        throw new \RuntimeException("No suitable user found for sending newsletter");
     }
 
 }

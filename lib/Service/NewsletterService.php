@@ -91,6 +91,17 @@ class NewsletterService {
         return $template;
     }
 
+    public function getRequiredCalendarIds() {
+        $config = $this->configService->load();
+        $ids = [];
+        foreach ($config["sections"] as $section) {
+            if ($section["type"] == "calendar") {
+                $ids = array_merge($ids, $section["calendar"]["ids"]);
+            }
+        }
+        return array_unique($ids);
+    }
+
     public function getPreview(array $config) {
         $template = $this->buildTemplate($config);
         return $config["previewType"] === "text" ?
@@ -134,7 +145,7 @@ class NewsletterService {
             "\n===========================================================================\n");
     }
 
-    function searchCalendars($ids, $timeRange) {
+    private function searchCalendars($ids, $timeRange) {
         $items = [];
         foreach ($this->calendarManager->getCalendars() as $calendar) {
             if (in_array($calendar->getKey(), $ids)) {
@@ -165,7 +176,7 @@ class NewsletterService {
         /** @var $tend \DateTimeImmutable */
         $tend = $item["DTEND"][0]->setTimezone($this->tz);
         $allDay = isset($item["DTSTART"][1]["VALUE"]); // TODO: really???
-        $description = $item["DESCRIPTION"][0];
+        $description = isset($item["DESCRIPTION"][0]) ? $item["DESCRIPTION"][0] : "";
 
         $placeholders['summary'] = $item["SUMMARY"][0];
         $placeholders['startDate'] = strftime("%A, %d.%m.%Y", $t->getTimestamp());

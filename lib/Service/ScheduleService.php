@@ -21,6 +21,7 @@
 namespace OCA\CalendarNews\Service;
 
 
+use OCP\Calendar\IManager;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
@@ -39,14 +40,33 @@ class ScheduleService {
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var IManager
+     */
+    private $calendarManager;
 
-    function __construct($AppName, IConfig $config, NewsletterService $newsletterService, LoggerInterface $logger) {
+    function __construct(
+        $AppName,
+        IConfig $config,
+        IManager $calendarManager,
+        NewsletterService $newsletterService,
+        LoggerInterface $logger
+    ) {
         $this->config = $config;
         $this->AppName = $AppName;
         $this->newsletterService = $newsletterService;
         $this->logger = $logger;
+        $this->calendarManager = $calendarManager;
     }
 
+    public function isSuitableUser() {
+        return empty(array_diff(
+            $this->newsletterService->getRequiredCalendarIds(),
+            array_map(function ($it) {
+                return $it->getKey();
+            }, $this->calendarManager->getCalendars())
+        ));
+    }
 
     public function load() {
         $str = $this->config->getAppValue($this->AppName, "schedule");
