@@ -87,6 +87,7 @@ class MailJob extends TimedJob {
         foreach ($this->userManager->search("") as $user) {
             $this->userSession->setUser($user);
             // just find first user with access to all required calendars, it doesn't really matter
+            $this->logger->info("Checking whether {$user->getUID()} is suitable to send newsletter");
             if ($this->scheduleService->isSuitableUser()) {
                 $this->logger->info("Sending newsletter as user: {$user->getUID()}");
                 return;
