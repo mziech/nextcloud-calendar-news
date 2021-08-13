@@ -76,11 +76,11 @@ class NewsletterService {
         $lcu = strtoupper($lc);
         setlocale(LC_ALL, $lc, "$lc.utf8", "{$lc}_{$lcu}", "{$lc}_{$lcu}.utf8");
         foreach ($config["sections"] as $section) {
-            if ($section["type"] == "heading") {
+            if ($section["type"] === "heading") {
                 $template->addHeading($section["text"]);
-            } elseif ($section["type"] == "text") {
+            } elseif ($section["type"] === "text") {
                 $template->addBodyText($section["text"]);
-            } elseif ($section["type"] == "calendar") {
+            } elseif ($section["type"] === "calendar") {
                 $this->addCalendarSection($template, $config, $section);
             } else {
                 $template->addBodyText("Unknown section:");
@@ -95,7 +95,7 @@ class NewsletterService {
         $config = $this->configService->load();
         $ids = [];
         foreach ($config["sections"] as $section) {
-            if ($section["type"] == "calendar") {
+            if ($section["type"] === "calendar") {
                 $ids = array_merge($ids, $section["calendar"]["ids"]);
             }
         }

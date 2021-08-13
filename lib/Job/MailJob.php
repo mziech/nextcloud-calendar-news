@@ -34,10 +34,6 @@ class MailJob extends TimedJob {
      */
     private $scheduleService;
     /**
-     * @var IUserManager
-     */
-    private $userManager;
-    /**
      * @var IUserSession
      */
     private $userSession;
@@ -48,7 +44,6 @@ class MailJob extends TimedJob {
 
     function __construct(
         ITimeFactory $time,
-        IUserManager $userManager,
         IUserSession $userSession,
         ScheduleService $scheduleService,
         LoggerInterface $logger
@@ -57,7 +52,6 @@ class MailJob extends TimedJob {
         parent::setInterval(20 * 60 /* s */);
         $this->scheduleService = $scheduleService;
         $this->logger = $logger;
-        $this->userManager = $userManager;
         $this->userSession = $userSession;
     }
 
@@ -71,7 +65,7 @@ class MailJob extends TimedJob {
             $now = new \DateTime();
 
             if ($next < $now) {
-                $this->findSuitableUser();
+                $this->scheduleService->findSuitableUser();
 
                 $this->logger->info("Sending newsletter is due: {$next->format("c")} < {$now->format("c")}");
                 $this->scheduleService->setLastExecutionTime($now);
@@ -80,20 +74,6 @@ class MailJob extends TimedJob {
         } finally {
             $this->userSession->setUser($oldUser);
         }
-    }
-
-    // TODO: make newsletter config user-specific so we don't need this ugly hack *sigh*
-    private function findSuitableUser(): void {
-        foreach ($this->userManager->search("") as $user) {
-            $this->userSession->setUser($user);
-            // just find first user with access to all required calendars, it doesn't really matter
-            $this->logger->info("Checking whether {$user->getUID()} is suitable to send newsletter");
-            if ($this->scheduleService->isSuitableUser()) {
-                $this->logger->info("Sending newsletter as user: {$user->getUID()}");
-                return;
-            }
-        }
-        throw new \RuntimeException("No suitable user found for sending newsletter");
     }
 
 }
