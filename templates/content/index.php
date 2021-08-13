@@ -145,7 +145,7 @@
                         </label>
                         <div class="calendar-badges">
                             <div class="calendar-badge" ng-repeat="id in section.calendar.ids">
-                                {{ calendarDisplayNames[id] }}
+                                {{ id in calendarDisplayNames ? calendarDisplayNames[id] : id }}
                                 <button type="button" class="icon icon-close"
                                         ng-click="removeCalendar(nr, id)">
                                 </button>
