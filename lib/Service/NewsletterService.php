@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Marco Ziech <marco+nc@ziech.net>
+ * @copyright Copyright (c) 2020-2021 Marco Ziech <marco+nc@ziech.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,11 +21,10 @@
 namespace OCA\CalendarNews\Service;
 
 
-use OCP\Calendar\IManager;
 use OCP\IL10N;
-use OCP\ILogger;
 use OCP\Mail\IEMailTemplate;
 use OCP\Mail\IMailer;
+use Psr\Log\LoggerInterface;
 
 class NewsletterService {
 
@@ -38,11 +37,7 @@ class NewsletterService {
      */
     private $mailer;
     /**
-     * @var IManager
-     */
-    private $calendarManager;
-    /**
-     * @var ILogger
+     * @var LoggerInterface
      */
     private $logger;
     /**
@@ -54,14 +49,24 @@ class NewsletterService {
      * @var \DateTimeZone
      */
     private $tz;
+    /**
+     * @var CalendarService
+     */
+    private $calendarService;
 
-    function __construct(IManager $calendarManager,  ConfigService $configService, IMailer $mailer, ILogger $logger, IL10N $l10n) {
+    function __construct(
+        CalendarService $calendarService,
+        ConfigService $configService,
+        IMailer $mailer,
+        LoggerInterface $logger,
+        IL10N $l10n
+    ) {
         $this->configService = $configService;
         $this->mailer = $mailer;
         $this->logger = $logger;
         $this->l10n = $l10n;
         $this->tz = new \DateTimeZone("Europe/Berlin");
-        $this->calendarManager = $calendarManager;
+        $this->calendarService = $calendarService;
     }
 
     private function buildTemplate(array $config) {
@@ -91,18 +96,8 @@ class NewsletterService {
         return $template;
     }
 
-    public function getRequiredCalendarIds() {
-        $config = $this->configService->load();
-        $ids = [];
-        foreach ($config["sections"] as $section) {
-            if ($section["type"] === "calendar") {
-                $ids = array_merge($ids, $section["calendar"]["ids"]);
-            }
-        }
-        return array_unique($ids);
-    }
-
     public function getPreview(array $config) {
+        $this->configService->validateCalendarIds($config);
         $template = $this->buildTemplate($config);
         return $config["previewType"] === "text" ?
             "<html><body><pre>".htmlentities($template->renderText())."</pre></body></html>" :
@@ -137,31 +132,12 @@ class NewsletterService {
             $now = $this->now($config);
             $timeRange["end"] = $now->add(new \DateInterval($section["calendar"]["end"]));
         }
-        $items = $this->searchCalendars($section["calendar"]["ids"], $timeRange);
+        $items = $this->calendarService->searchCalendars($section["calendar"]["ids"], $timeRange);
         foreach ($items as $item) {
             $this->addCalenderEvent($template, $item, $section);
         }
         $template->addBodyButton('***', '',
             "\n===========================================================================\n");
-    }
-
-    private function searchCalendars($ids, $timeRange) {
-        $items = [];
-        foreach ($this->calendarManager->getCalendars() as $calendar) {
-            if (in_array($calendar->getKey(), $ids)) {
-                $results = $calendar->search("", ["SUMMARY"], ["timerange" => $timeRange]);
-                foreach ($results as $result) {
-                    $items = array_merge($items, $result["objects"]);
-                }
-            }
-        }
-        usort($items, function ($a, $b) {
-            $astart = $a["DTSTART"][0];
-            $bstart = $b["DTSTART"][0];
-            return $astart->getTimestamp() - $bstart->getTimestamp();
-        });
-
-        return $items;
     }
 
     /**

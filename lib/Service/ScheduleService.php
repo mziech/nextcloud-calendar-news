@@ -21,10 +21,7 @@
 namespace OCA\CalendarNews\Service;
 
 
-use OCP\Calendar\IManager;
 use OCP\IConfig;
-use OCP\IUserManager;
-use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class ScheduleService {
@@ -42,60 +39,17 @@ class ScheduleService {
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var IManager
-     */
-    private $calendarManager;
-    /**
-     * @var IUserManager
-     */
-    private $userManager;
-    /**
-     * @var IUserSession
-     */
-    private $userSession;
 
     function __construct(
         $AppName,
         IConfig $config,
-        IManager $calendarManager,
         NewsletterService $newsletterService,
-        IUserManager $userManager,
-        IUserSession  $userSession,
         LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->AppName = $AppName;
         $this->newsletterService = $newsletterService;
         $this->logger = $logger;
-        $this->calendarManager = $calendarManager;
-        $this->userManager = $userManager;
-        $this->userSession = $userSession;
-    }
-
-    // TODO: make newsletter config user-specific so we don't need this ugly hack *sigh*
-    public function findSuitableUser(): void {
-        $required = $this->newsletterService->getRequiredCalendarIds();
-        $this->logger->info("Looking for user which has access to calendars: " . implode(", ", $required));
-        foreach ($this->userManager->search("") as $user) {
-            $this->logger->debug("Checking whether {$user->getUID()} is suitable to send newsletter");
-            $this->userSession->setUser($user);
-            // just find first user with access to all required calendars, it doesn't really matter
-            if ($this->isSuitableUser($required)) {
-                $this->logger->info("Sending newsletter as user: {$user->getUID()}");
-                return;
-            }
-        }
-        throw new \RuntimeException("No suitable user found for sending newsletter");
-    }
-
-    private function isSuitableUser($required) {
-        return empty(array_diff(
-            $required,
-            array_map(function ($it) {
-                return $it->getKey();
-            }, $this->calendarManager->getCalendars())
-        ));
     }
 
     public function load() {

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Marco Ziech <marco+nc@ziech.net>
+ * @copyright Copyright (c) 2020-2021 Marco Ziech <marco+nc@ziech.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,6 +21,8 @@
 namespace OCA\CalendarNews\Service;
 
 
+use OCP\Calendar\ICalendar;
+use OCP\Calendar\IManager;
 use OCP\IConfig;
 
 class ConfigService {
@@ -29,14 +31,41 @@ class ConfigService {
      * @var IConfig
      */
     private $config;
+    /**
+     * @var IManager
+     */
+    private $calendarManager;
+
     private $AppName;
 
-    function __construct($AppName, IConfig $config) {
+    function __construct($AppName, IManager $calendarManager, IConfig $config) {
         $this->config = $config;
         $this->AppName = $AppName;
+        $this->calendarManager = $calendarManager;
+    }
+
+    public function validateCalendarIds($config) {
+        $actual = [];
+        foreach ($config["sections"] as $section) {
+            if ($section["type"] === "calendar") {
+                $actual = array_merge($actual, $section["calendar"]["ids"]);
+            }
+        }
+        $actual = array_unique($actual);
+
+        $allowed = array_map(function (ICalendar $calendar) {
+            return $calendar->getKey();
+        }, $this->calendarManager->getCalendars());
+
+        if (!empty(array_diff($actual, $allowed))) {
+            throw new \RuntimeException("Will not save configuration with calendars the user cannot access: " .
+                "allowed=" . implode(", ", $allowed) . ", " .
+                "actual=" . implode(", ", $actual));
+        }
     }
 
     public function save($config) {
+        $this->validateCalendarIds($config);
         $this->config->setAppValue($this->AppName, "config", json_encode($config));
     }
 

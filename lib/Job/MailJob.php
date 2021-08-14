@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright (c) 2020 Marco Ziech <marco+nc@ziech.net>
+ * @copyright Copyright (c) 2020-2021 Marco Ziech <marco+nc@ziech.net>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,8 +23,6 @@ namespace OCA\CalendarNews\Job;
 use OCA\CalendarNews\Service\ScheduleService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
-use OCP\IUserManager;
-use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
 class MailJob extends TimedJob {
@@ -34,17 +32,12 @@ class MailJob extends TimedJob {
      */
     private $scheduleService;
     /**
-     * @var IUserSession
-     */
-    private $userSession;
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     function __construct(
         ITimeFactory $time,
-        IUserSession $userSession,
         ScheduleService $scheduleService,
         LoggerInterface $logger
     ) {
@@ -52,27 +45,19 @@ class MailJob extends TimedJob {
         parent::setInterval(20 * 60 /* s */);
         $this->scheduleService = $scheduleService;
         $this->logger = $logger;
-        $this->userSession = $userSession;
     }
 
     protected function run($argument) {
-        $oldUser = $this->userSession->getUser();
-        try {
-            $next = $this->scheduleService->getNextExecutionTime();
-            if ($next == null) {
-                return;
-            }
-            $now = new \DateTime();
+        $next = $this->scheduleService->getNextExecutionTime();
+        if ($next == null) {
+            return;
+        }
+        $now = new \DateTime();
 
-            if ($next < $now) {
-                $this->scheduleService->findSuitableUser();
-
-                $this->logger->info("Sending newsletter is due: {$next->format("c")} < {$now->format("c")}");
-                $this->scheduleService->setLastExecutionTime($now);
-                $this->scheduleService->sendNow();
-            }
-        } finally {
-            $this->userSession->setUser($oldUser);
+        if ($next < $now) {
+            $this->logger->info("Sending newsletter is due: {$next->format("c")} < {$now->format("c")}");
+            $this->scheduleService->setLastExecutionTime($now);
+            $this->scheduleService->sendNow();
         }
     }
 
