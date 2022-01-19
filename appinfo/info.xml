@@ -5,7 +5,7 @@
     <name>Calendar Newsletter</name>
     <summary>Calendar-based Newsletter</summary>
     <description><![CDATA[This generates frequent e-mail newsletters based on selected calendars.]]></description>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <licence>agpl</licence>
     <author mail="marco+nc@ziech.net" homepage="https://github.com/mziech">Marco Ziech</author>
     <namespace>CalendarNews</namespace>
@@ -16,7 +16,7 @@
     <bugs>https://github.com/mziech/nextcloud-calendar-news/issues</bugs>
     <dependencies>
         <owncloud min-version="10"/>
-        <nextcloud min-version="15" max-version="22"/>
+        <nextcloud min-version="15" max-version="23"/>
     </dependencies>
     <background-jobs>
         <job>OCA\CalendarNews\Job\MailJob</job>
