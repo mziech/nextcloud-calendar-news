@@ -84,7 +84,7 @@ class CalendarService {
     }
 
     private function createCalendar(array $calendarInfo) {
-        $calendar = new Calendar($this->calDavBackend, $calendarInfo, $this->l10n, $this->config);
+        $calendar = new Calendar($this->calDavBackend, $calendarInfo, $this->l10n, $this->config, $this->logger);
         return new CalendarImpl(
             $calendar,
             $calendarInfo,
