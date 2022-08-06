@@ -75,6 +75,7 @@ OC.L10N.register(
     "Content" : "Inhalt",
     "Schedule" : "Planung",
     "User's view" : "Benutzeransicht",
+    "Configuration Guide" : "Konfigurationsanleitung",
     "Previous Newsletter" : "Letzter Newsletter",
     "Next Newsletter" : "Nächster Newsletter",
     "Due to changes to the calendars used to generate the newsletter, this preview might not be accurate!" : "Aufgrund von Änderungen an den zugrunde liegenden Kalendern und Terminen, kann sich diese Vorschau vom tatsächlich gesendeten Newsletter unterscheiden!",

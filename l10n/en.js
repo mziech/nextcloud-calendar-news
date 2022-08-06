@@ -75,6 +75,7 @@ OC.L10N.register(
     "Content" : "Content",
     "Schedule" : "Schedule",
     "User's view" : "User's view",
+    "Configuration Guide" : "Configuration Guide",
     "Previous Newsletter" : "Previous Newsletter",
     "Next Newsletter" : "Next Newsletter",
     "Due to changes to the calendars used to generate the newsletter, this preview might not be accurate!" : "Due to changes to the calendars used to generate the newsletter, this preview might not be accurate!",

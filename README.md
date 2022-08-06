@@ -17,6 +17,10 @@ https://github.com/mziech/nextcloud-calendar-news/releases/latest/download/calen
 and activate, if required.
 
 ## TODO
-* Angular-1-based frontend should be replaced by a VueJS based one which is closed to the Nextcloud Design
+* Angular-1-based frontend should be replaced by a VueJS based one which is closer to the Nextcloud Design
 * Fix layout issues at some configuration pages
 * Tests
+
+## Configuration
+
+See [CONFIG.md](CONFIG.md)

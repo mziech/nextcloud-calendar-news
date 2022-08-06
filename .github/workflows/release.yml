@@ -1,24 +1,69 @@
 on:
   push:
 
+env:
+  APP_NAME: calendar_news
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build
-        run: touch calendar_news.tar.gz && tar --exclude-ignore=.appignore --transform 's,^\./,calendar_news/,' -cvzf calendar_news.tar.gz .
+
+      - name: Pack
+        run: touch ${{ env.APP_NAME }}.tar.gz && tar --exclude-ignore=.appignore --transform 's,^\./,${{ env.APP_NAME }}/,' -cvzf ${{ env.APP_NAME }}.tar.gz .
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2.2.4
         with:
-          name: distribution
-          path: calendar_news.tar.gz
+          name: ${{ env.APP_NAME }}
+          path: |
+            ${{ env.APP_NAME }}.tar.gz
+            CHANGELOG.md
+          if-no-files-found: error
+
+  release:
+    environment: release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: ${{ env.APP_NAME }}
+
+      - name: Get version from tag
+        id: tag_name
+        run: |
+          echo ::set-output name=current_version::${GITHUB_REF#refs/tags/v}
+        shell: bash
+
+      - name: Get Changelog Entry
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ steps.tag_name.outputs.current_version }}
+          path: ./CHANGELOG.md
+
       - name: Upload Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        id: upload_release
         with:
-          files: calendar_news.tar.gz
+          body: ${{ steps.changelog_reader.outputs.changes }}
+          files: ${{ env.APP_NAME }}.tar.gz
+          prerelease: ${{ contains(github.ref, '-') }}  # following semver spec
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload app to Nextcloud appstore
+        uses: R0Wi/nextcloud-appstore-push-action@a011fe619bcf6e77ddebc96f9908e1af4071b9c1
+        if: "!contains(github.ref, '-')"
+        with:
+          app_name: ${{ env.APP_NAME }}
+          appstore_token: ${{ secrets.APPSTORE_TOKEN }}
+          download_url: https://github.com/${{ github.repository }}/releases/download/v${{ steps.tag_name.outputs.current_version }}/${{ env.APP_NAME }}.tar.gz
+          app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Delete crt and key from local storage
+        run: rm -f ~/.nextcloud/certificates/*

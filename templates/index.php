@@ -18,10 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-script('calendar_news', 'angular.min');
-script('calendar_news', 'angular-route.min');
-script('calendar_news', 'script');
-style('calendar_news', 'style');
+\OCP\Util::addScript('calendar_news', 'angular.min');
+\OCP\Util::addScript('calendar_news', 'angular-route.min');
+\OCP\Util::addScript('calendar_news', 'script');
+\OCP\Util::addStyle('calendar_news', 'style');
 ?>
 
 <div id="app" ng-app="CalendarNews">

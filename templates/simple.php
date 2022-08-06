@@ -18,8 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-style('calendar_news', 'style');
-script('calendar_news', 'simple');
+\OCP\Util::addStyle('calendar_news', 'style');
+\OCP\Util::addScript('calendar_news', 'simple');
 ?>
 
 <div id="app" class="calendar-news-simple">
