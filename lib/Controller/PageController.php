@@ -29,6 +29,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IGroupManager;
+use OCP\IL10N;
 use OCP\IRequest;
 
 class PageController extends Controller {
@@ -37,6 +38,10 @@ class PageController extends Controller {
      * @var IGroupManager
      */
     private $groupManager;
+    /**
+     * @var IL10N
+     */
+    private $l;
     /**
      * @var NewsletterService
      */
@@ -54,6 +59,7 @@ class PageController extends Controller {
         $AppName,
         IRequest $request,
         IGroupManager $groupManager,
+        IL10N $l,
         NewsletterService $newsletterService,
         ConfigService $configService,
         ScheduleService $scheduleService,
@@ -65,6 +71,7 @@ class PageController extends Controller {
         $this->newsletterService = $newsletterService;
         $this->configService = $configService;
         $this->scheduleService = $scheduleService;
+        $this->l = $l;
     }
 
 	/**
@@ -98,10 +105,14 @@ class PageController extends Controller {
      * @NoCSRFRequired
      */
     public function lastNewsletter() {
+        $timestamp = $this->scheduleService->getLastExecutionTime();
+        if (!$timestamp) {
+            $timestamp = new \DateTime("now");
+        }
         return new DataDisplayResponse(
             $this->newsletterService->getPreview(array_merge($this->configService->load(), [
                 "previewType" => "html",
-                "previewTime" => $this->scheduleService->getLastExecutionTime()->format("Y-m-d\\TH:i:s.uO")
+                "previewTime" => $timestamp->format("Y-m-d\\TH:i:s.uO")
             ])),
             Http::STATUS_OK,
             ["Content-Type" => "text/html"]
@@ -113,10 +124,19 @@ class PageController extends Controller {
      * @NoCSRFRequired
      */
     public function nextNewsletter() {
+        $timestamp = $this->scheduleService->getNextExecutionTime();
+        if (!$timestamp) {
+            return new DataDisplayResponse(
+                $this->l->t("There is no newsletter scheduled at the moment."),
+                Http::STATUS_OK,
+                ["Content-Type" => "text/html"]
+            );
+        }
+
         return new DataDisplayResponse(
             $this->newsletterService->getPreview(array_merge($this->configService->load(), [
                 "previewType" => "html",
-                "previewTime" => $this->scheduleService->getNextExecutionTime()->format("Y-m-d\\TH:i:s.uO")
+                "previewTime" => $timestamp->format("Y-m-d\\TH:i:s.uO")
             ])),
             Http::STATUS_OK,
             ["Content-Type" => "text/html"]

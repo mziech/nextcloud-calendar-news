@@ -6,6 +6,7 @@
     "Newsletter sent" : "Newsletter sent",
     "Failed to send newsletter" : "Failed to send newsletter",
     "Failed to remove last execution timestamp" : "Failed to remove last execution timestamp",
+    "There is no newsletter scheduled at the moment." : "There is no newsletter scheduled at the moment.",
     "Schedule Newsletter" : "Schedule Newsletter",
     "Recipients:" : "Recipients:",
     "Send now" : "Send now",

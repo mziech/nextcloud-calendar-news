@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2022-11-20
+- Fix layout issues for Nextcloud 25, drop IE11 support, fixes [#11](https://github.com/mziech/nextcloud-calendar-news/issues/11)
+- Prefill skip field on schedule page with 0, fixes [#9](https://github.com/mziech/nextcloud-calendar-news/issues/9)
+- Fix preview not rendering if there is no schedule
+- Update AngularJS from 1.6.2 to 1.8.2
+
 ## [1.1.4] - 2022-08-06
 ### Added
 - Initial app store release

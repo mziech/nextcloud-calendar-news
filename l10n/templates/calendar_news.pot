@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ownCloud Apps 8.0.0\n"
 "Report-Msgid-Bugs-To: translations@owncloud.org\n"
-"POT-Creation-Date: 2022-08-06 18:07+0200\n"
+"POT-Creation-Date: 2022-11-13 22:38+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,36 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: js/script.js:37
+#: js/script.js:38
 msgid "Failed to load schedule"
 msgstr ""
 
-#: js/script.js:70 js/script.js:187
+#: js/script.js:71 js/script.js:188
 msgid "Configuration successfully saved"
 msgstr ""
 
-#: js/script.js:73 js/script.js:189
+#: js/script.js:74 js/script.js:190
 msgid "Failed to save configuration"
 msgstr ""
 
-#: js/script.js:78
+#: js/script.js:79
 msgid "Really send the newsletter NOW to all receipients?"
 msgstr ""
 
-#: js/script.js:80
+#: js/script.js:81
 msgid "Newsletter sent"
 msgstr ""
 
-#: js/script.js:82
+#: js/script.js:83
 msgid "Failed to send newsletter"
 msgstr ""
 
-#: js/script.js:91
+#: js/script.js:92
 msgid "Failed to remove last execution timestamp"
+msgstr ""
+
+#: lib/Controller/PageController.php:130
+msgid "There is no newsletter scheduled at the moment."
 msgstr ""
 
 #: templates/content/index.php:5

@@ -21,6 +21,7 @@ app.config(function ($httpProvider, $routeProvider) {
 
 app.controller("ScheduleController", function ($rootScope, $scope, $http) {
     $scope.schedule = {
+        skip: 0,
         emails: [],
         repeatInterval: "weekly"
     };

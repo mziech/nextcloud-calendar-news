@@ -1,6 +1,7 @@
 
 .app-calendar_news #app {
-	width: 100%;
+	display: flex;
+	width: 100%
 }
 
 .calendar-news-wrapper {
@@ -30,7 +31,7 @@
 
 .calendar-news-wrapper .element-badge {
 	display: inline-block;
-	background-color: #ddd;
+	background-color: var(--color-background-dark);
 	border-radius: 5px;
 	margin-right: 10px;
 	background-clip: border-box;
@@ -38,15 +39,17 @@
 
 #config-container .calendar-badge {
 	display: inline-block;
-	background-color: #ddd;
+	background-color: var(--color-background-dark);
 	border-radius: 5px;
 	margin-right: 10px;
 	background-clip: border-box;
 }
 
 #config-container .config-section {
-	background-color: #ccc;
-	border-radius: 5px;
+	border-color: var(--color-border-dark);
+	border-radius: var(--border-radius);
+	border-width: 2px;
+	border-style: dashed;
 	background-clip: border-box;
 	margin-bottom: 10px;
 	padding: 10px;
@@ -105,22 +108,18 @@
 }
 
 .calendar-news-simple #app-content {
-	height: calc(100% - 50px);
 }
 
 .calendar-news-simple #app-content-wrapper {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	/* IE11 */
-	height: 100%;
 }
 
 .calendar-news-simple #app-content-wrapper .center-container {
 	display: flex;
 	flex: 0 0 50%;
 	flex-direction: column;
-	height: 100%;
 }
 
 .calendar-news-simple #app-content-wrapper .center-container .note {
@@ -132,8 +131,6 @@
 
 .calendar-news-simple #app-content-wrapper .center-container iframe {
 	flex: 1 0 auto;
-	/* IE11 */
-	width: 100%;
 }
 
 .calendar-news-simple #app-content-wrapper .center-container .loading {

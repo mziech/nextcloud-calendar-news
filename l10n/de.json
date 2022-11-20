@@ -6,6 +6,7 @@
     "Newsletter sent" : "Newsletter gesendet",
     "Failed to send newsletter" : "Fehler beim Senden des Newsletters",
     "Failed to remove last execution timestamp" : "Fehler beim Löschen des letzten Ausführungszeitpunkts",
+    "There is no newsletter scheduled at the moment." : "Im Moment ist kein weiterer Newsletter geplant.",
     "Schedule Newsletter" : "Newsletter Planen",
     "Recipients:" : "Empfänger:",
     "Send now" : "Jetzt senden",
