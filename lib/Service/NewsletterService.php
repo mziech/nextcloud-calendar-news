@@ -109,7 +109,7 @@ class NewsletterService {
         $config = $this->configService->load();
         $template = $this->buildTemplate($config);
         $msg = $this->mailer->createMessage();
-        $msg->setTo($recipients);
+        $msg->setBcc($recipients);
         $msg->setPlainBody($template->renderText());
         $msg->setHtmlBody($template->renderHtml());
         $msg->setSubject($subject);
