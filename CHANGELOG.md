@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6] - 2023-03-27
+- USE CCI/BCC (copie carbone invisible) to send the newsletter [#14](https://github.com/mziech/nextcloud-calendar-news/issues/14)
+
 ## [1.1.5] - 2022-11-20
 - Fix layout issues for Nextcloud 25, drop IE11 support, fixes [#11](https://github.com/mziech/nextcloud-calendar-news/issues/11)
 - Prefill skip field on schedule page with 0, fixes [#9](https://github.com/mziech/nextcloud-calendar-news/issues/9)
