@@ -29,7 +29,7 @@ For each calendar, the relative timespan can be configured and the list entries 
     <screenshot>https://raw.githubusercontent.com/mziech/nextcloud-calendar-news/master/img/screenshot3.jpg</screenshot>
     <dependencies>
         <owncloud min-version="10"/>
-        <nextcloud min-version="23" max-version="25"/>
+        <nextcloud min-version="23" max-version="26"/>
     </dependencies>
     <background-jobs>
         <job>OCA\CalendarNews\Job\MailJob</job>
