@@ -150,17 +150,27 @@ class NewsletterService {
         /** @var $t \DateTimeImmutable */
         $t = $item["DTSTART"][0]->setTimezone($this->tz);
         /** @var $tend \DateTimeImmutable */
-        $tend = $item["DTEND"][0]->setTimezone($this->tz);
-        $allDay = isset($item["DTSTART"][1]["VALUE"]); // TODO: really???
+        /** Per https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
+         * For cases where a "VEVENT" calendar component specifies a "DTSTART" property with a DATE value type
+         * but no "DTEND" nor "DURATION" property, the event's duration is taken to be one day.
+         * For cases where a "VEVENT" calendar component specifies a "DTSTART" property with a DATE-TIME value type
+         * but no "DTEND" property, the event ends on the same calendar date and time of day specified by the "DTSTART" property.
+        **/
+        if ($item["DTEND"][0]) {
+            $tend = $item["DTEND"][0]->setTimezone($this->tz);
+        } elseif ($item["DURATION"][0]) {
+            $tend = $t->add(new \DateInterval($item["DURATION"][0]));
+        } else {
+            $allDay = true;
+            $tend = $tend->sub(new \DateInterval("P1D"));
+        }
+
         $description = isset($item["DESCRIPTION"][0]) ? $item["DESCRIPTION"][0] : "";
 
         $placeholders['summary'] = $item["SUMMARY"][0];
         $placeholders['startDate'] = strftime("%A, %d.%m.%Y", $t->getTimestamp());
         $placeholders['endDate'] = strftime("%A, %d.%m.%Y", $tend->getTimestamp());
         $tstr = strftime($allDay ? "%A, %d.%m.%Y" : "%A, %d.%m.%Y %R", $t->getTimestamp());
-        if ($allDay) {
-            $tend = $tend->sub(new \DateInterval("P1D"));
-        }
         if ($t->getTimeStamp() != $tend->getTimeStamp()) {
             if ($placeholders['startDate'] != $placeholders['endDate']) {
                 $placeholders['dateTimeRange'] = $tstr . " - " . strftime($allDay ? "%A, %d.%m.%Y" : "%A, %d.%m.%Y %R", $tend->getTimestamp());
