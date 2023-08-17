@@ -53,6 +53,7 @@ class NewsletterService {
      * @var CalendarService
      */
     private $calendarService;
+    private $oneDay;
 
     function __construct(
         CalendarService $calendarService,
@@ -65,8 +66,9 @@ class NewsletterService {
         $this->mailer = $mailer;
         $this->logger = $logger;
         $this->l10n = $l10n;
-        $this->tz = new \DateTimeZone("Europe/Berlin");
+        $this->tz = new \DateTimeZone("Europe/Berlin");  // TODO: get system default timezone
         $this->calendarService = $calendarService;
+        $this->oneDay = new \DateInterval("P1D");
     }
 
     private function buildTemplate(array $config) {
@@ -145,10 +147,16 @@ class NewsletterService {
      * @param $item
      */
     private function addCalenderEvent(IEMailTemplate $template, $item, array $section) {
+        // For excessive debugging of VEVENT data:
+        //$template->addBodyListItem(print_r($item, true));
+
         $placeholders = [];
-        date_default_timezone_set($this->tz->getName());
+        $tz = $this->tz;
+        date_default_timezone_set($tz->getName());
         /** @var $t \DateTimeImmutable */
-        $t = $item["DTSTART"][0]->setTimezone($this->tz);
+        $t = $item["DTSTART"][0]->setTimezone($tz);
+        // Example for an all-day timestamp: DTSTART;VALUE=DATE:20230821
+        $allDay = isset($item["DTSTART"][1]["VALUE"]) && $item["DTSTART"][1]["VALUE"]->getValue() === "DATE";
         /** @var $tend \DateTimeImmutable */
         /** Per https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
          * For cases where a "VEVENT" calendar component specifies a "DTSTART" property with a DATE value type
@@ -157,12 +165,16 @@ class NewsletterService {
          * but no "DTEND" property, the event ends on the same calendar date and time of day specified by the "DTSTART" property.
         **/
         if ($item["DTEND"][0]) {
-            $tend = $item["DTEND"][0]->setTimezone($this->tz);
+            $tend = $item["DTEND"][0]->setTimezone($tz);
         } elseif ($item["DURATION"][0]) {
             $tend = $t->add(new \DateInterval($item["DURATION"][0]));
         } else {
-            $allDay = true;
-            $tend = $tend->sub(new \DateInterval("P1D"));
+            // event duration one day or same timestamp as start
+            $tend = $allDay ? $t->add($this->oneDay) : $t;
+        }
+
+        if ($allDay) {
+            $tend = $tend->sub($this->oneDay);
         }
 
         $description = isset($item["DESCRIPTION"][0]) ? $item["DESCRIPTION"][0] : "";

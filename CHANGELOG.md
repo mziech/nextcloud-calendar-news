@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.1.8] - 2023-08-17
+- Verified compatibility with Nextcloud 25-27
 - RFC compliant handling for events without DTEND [#21](https://github.com/mziech/nextcloud-calendar-news/pull/21)
 
 ## [1.1.7] - 2023-05-21
