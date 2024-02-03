@@ -25,7 +25,7 @@
 ?>
 
 <div id="app" ng-app="CalendarNews">
-	<div id="app-navigation">
+	<div id="app-navigation" class="app-navigation-administration">
 		<?php print_unescaped($this->inc('navigation/index')); ?>
 	</div>
 

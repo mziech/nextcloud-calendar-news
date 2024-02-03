@@ -23,7 +23,7 @@
 ?>
 
 <div id="app" class="calendar-news-simple">
-    <div id="app-navigation">
+    <div id="app-navigation" class="app-navigation-administration">
         <ul>
             <li><a class="frame-link" href="last-newsletter"><?php p($l->t("Previous Newsletter"))?></a></li>
             <li><a class="frame-link" href="next-newsletter"><?php p($l->t("Next Newsletter"))?></a></li>
