@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.10] - 2024-03-05
+- Include proper "To:" header to avoid resend error with Majordomo
+
 ## [1.1.9] - 2024-02-03
 - Verified compatibility with Nextcloud 28
 
