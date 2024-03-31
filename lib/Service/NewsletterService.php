@@ -112,7 +112,6 @@ class NewsletterService {
         $template = $this->buildTemplate($config);
         $msg = $this->mailer->createMessage();
         $msg->setBcc($recipients);
-        $msg->setTo(["undisclosed-recipients:;"]);  // avoid resend error with majordomo
         $msg->setPlainBody($template->renderText());
         $msg->setHtmlBody($template->renderHtml());
         $msg->setSubject($subject);

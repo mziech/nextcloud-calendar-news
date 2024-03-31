@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.11] - 2024-03-31
+- Revert: Include proper "To:" header to avoid resend error with Majordomo [#25](https://github.com/mziech/nextcloud-calendar-news/issues/25)
+
 ## [1.1.10] - 2024-03-05
 - Include proper "To:" header to avoid resend error with Majordomo
 
