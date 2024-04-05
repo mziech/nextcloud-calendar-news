@@ -12,6 +12,7 @@ Possible placeholders are:
 * `${dateRange}` - a date range (without time) if the event spans multiple days, start date other wise
 * `${summary}` - the title line of the event
 * `${description}` - the complete description body of the event
+* `${calendar}` - The name of the calendar in which the event is
 * `${0} ... ${n}` - if the regular expression contains placeholders, they can be addressed by just their number
 * `${item.XYZ}` - for a line in the description starting like `XYZ:` something, this would contain something
 * `${*}` - outputs all known placeholders as JSON for debugging

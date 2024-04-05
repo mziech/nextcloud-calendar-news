@@ -178,7 +178,7 @@ class NewsletterService {
         }
 
         $description = isset($item["DESCRIPTION"][0]) ? $item["DESCRIPTION"][0] : "";
-
+        $placeholders['calendar'] = $item["calendarName"];
         $placeholders['summary'] = $item["SUMMARY"][0];
         $placeholders['startDate'] = strftime("%A, %d.%m.%Y", $t->getTimestamp());
         $placeholders['endDate'] = strftime("%A, %d.%m.%Y", $tend->getTimestamp());
