@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.13] - 2024-07-27
+- Verified compatibility with Nextcloud 29
+
 ## [1.1.12] - 2024-04-04
 - Fix version in metadata [#26](https://github.com/mziech/nextcloud-calendar-news/pull/26)
 
