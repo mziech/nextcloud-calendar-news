@@ -61,6 +61,8 @@ class CalendarService {
 
     public function searchCalendars($ids, $timeRange) {
         $items = [];
+        $idCounter=0;
+        $itemsCounter=0;
         foreach ($ids as $id) {
             $calendarInfo = $this->calDavBackend->getCalendarById($id);
             if (!$calendarInfo) {
@@ -69,10 +71,14 @@ class CalendarService {
             }
 
             $calendar = $this->createCalendar($calendarInfo);
+            $calendarName[$idCounter] = $calendarInfo["{DAV:}displayname"];
             $results = $calendar->search("", ["SUMMARY"], ["timerange" => $timeRange]);
             foreach ($results as $result) {
                 $items = array_merge($items, $result["objects"]);
+                $items[$itemsCounter] = array_merge($items[$itemsCounter],array("calendarName"=>$calendarName[$idCounter])); //add name of the corresponding calendar to the array of each event
+                $itemsCounter = $itemsCounter + 1;
             }
+            $idCounter = $idCounter + 1;
         }
         usort($items, function ($a, $b) {
             $astart = $a["DTSTART"][0];
