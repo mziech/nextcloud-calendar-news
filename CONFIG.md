@@ -14,6 +14,7 @@ Possible placeholders are:
 * `${description}` - the complete description body of the event
 * `${0} ... ${n}` - if the regular expression contains placeholders, they can be addressed by just their number
 * `${item.XYZ}` - for a line in the description starting like `XYZ:` something, this would contain something
+* `${calendar}` - the name of the calendar containing the event (if multiple calendars are selected)
 * `${*}` - outputs all known placeholders as JSON for debugging
 
 Additionally, filters can be applied to each placeholder value like `${...|filter1|filter2}`.

@@ -71,7 +71,11 @@ class CalendarService {
             $calendar = $this->createCalendar($calendarInfo);
             $results = $calendar->search("", ["SUMMARY"], ["timerange" => $timeRange]);
             foreach ($results as $result) {
-                $items = array_merge($items, $result["objects"]);
+                $items = array_merge($items, array_map(function ($item) use ($calendar) {
+                    return array_merge($item, ["x-calendar-news" => [
+                        "calendar" => $calendar->getDisplayName(),
+                    ]]);
+                }, $result["objects"]));
             }
         }
         usort($items, function ($a, $b) {
