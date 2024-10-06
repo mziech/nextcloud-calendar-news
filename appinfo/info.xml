@@ -15,7 +15,7 @@ The following section types are supported:
 
 For each calendar, the relative timespan can be configured and the list entries can be formatted using a simple placeholder-language.
     </description>
-    <version>1.1.14</version>
+    <version>1.1.15</version>
     <licence>agpl</licence>
     <author mail="marco+nc@ziech.net" homepage="https://github.com/mziech">Marco Ziech</author>
     <namespace>CalendarNews</namespace>
@@ -29,7 +29,7 @@ For each calendar, the relative timespan can be configured and the list entries 
     <screenshot>https://raw.githubusercontent.com/mziech/nextcloud-calendar-news/master/img/screenshot3.jpg</screenshot>
     <dependencies>
         <owncloud min-version="10"/>
-        <nextcloud min-version="26" max-version="29"/>
+        <nextcloud min-version="28" max-version="30"/>
     </dependencies>
     <background-jobs>
         <job>OCA\CalendarNews\Job\MailJob</job>
