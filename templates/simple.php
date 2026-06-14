@@ -25,8 +25,8 @@
 <div id="app" class="calendar-news-simple">
     <div id="app-navigation" class="app-navigation-administration">
         <ul>
-            <li><a class="frame-link" href="last-newsletter"><?php p($l->t("Previous Newsletter"))?></a></li>
-            <li><a class="frame-link" href="next-newsletter"><?php p($l->t("Next Newsletter"))?></a></li>
+            <li><a class="frame-link" href="last-newsletter" target="calendar-news-preview"><?php p($l->t("Previous Newsletter"))?></a></li>
+            <li><a class="frame-link" href="next-newsletter" target="calendar-news-preview"><?php p($l->t("Next Newsletter"))?></a></li>
         </ul>
     </div>
 
@@ -36,10 +36,7 @@
                 <div class="note">
                     <?php p($l->t("Due to changes to the calendars used to generate the newsletter, this preview might not be accurate!"))?>
                 </div>
-                <iframe></iframe>
-                <div class="loading">
-                    <div class="icon-loading-dark"></div>
-                </div>
+                <iframe name="calendar-news-preview"></iframe>
             </div>
         </div>
     </div>

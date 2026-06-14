@@ -53,6 +53,7 @@ jobs:
           body: ${{ steps.changelog_reader.outputs.changes }}
           files: ${{ env.APP_NAME }}.tar.gz
           prerelease: ${{ contains(github.ref, '-') }}  # following semver spec
+          discussion_category_name: releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -63,6 +64,7 @@ jobs:
           appstore_token: ${{ secrets.APPSTORE_TOKEN }}
           download_url: https://github.com/${{ github.repository }}/releases/download/v${{ steps.tag_name.outputs.current_version }}/${{ env.APP_NAME }}.tar.gz
           app_private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          nightly: ${{ contains(github.ref, '-') }}  # following semver spec
 
       - name: Delete crt and key from local storage
         run: rm -f ~/.nextcloud/certificates/*

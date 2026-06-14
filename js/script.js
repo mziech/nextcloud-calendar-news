@@ -35,7 +35,7 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
             $scope.previewNextExecutionTime = xhr.data.nextExecutionTime;
             $scope.scheduleForm.$setPristine();
         }, function () {
-            OC.Notification.showTemporary(t("calendar_news", "Failed to load schedule"), {type: "error"});
+            OCP.Toast.error(t("calendar_news", "Failed to load schedule"));
         });
     }
 
@@ -68,19 +68,19 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
             parseEmail();
         }
         $http.post("schedule", {schedule: $scope.schedule}).then(function () {
-            OC.Notification.showTemporary(t("calendar_news", "Configuration successfully saved"));
+            OC.Toast.success(t("calendar_news", "Configuration successfully saved"));
             load();
         }, function () {
-            OC.Notification.showTemporary(t("calendar_news", "Failed to save configuration"), {type: "error"});
+            OC.Toast.error(t("calendar_news", "Failed to save configuration"));
         });
     };
 
     $scope.sendNow = function () {
         if (confirm(t("calendar_news", "Really send the newsletter NOW to all receipients?"))) {
             $http.post("send-now", {emails: $scope.schedule.emails}).then(function () {
-                OC.Notification.showTemporary(t("calendar_news", "Newsletter sent"));
+                OCP.Toast.success(t("calendar_news", "Newsletter sent"));
             }, function () {
-                OC.Notification.showTemporary(t("calendar_news", "Failed to send newsletter"), {type: "error"});
+                OCP.Toast.error(t("calendar_news", "Failed to send newsletter"));
             });
         }
     };
@@ -89,7 +89,7 @@ app.controller("ScheduleController", function ($rootScope, $scope, $http) {
         $http.post("remove-last").then(function () {
             $scope.lastExecutionTime = null;
         }, function () {
-            OC.Notification.showTemporary(t("calendar_news", "Failed to remove last execution timestamp"), {type: "error"});
+            OCP.Toast.error(t("calendar_news", "Failed to remove last execution timestamp"));
         });
     };
 
@@ -185,9 +185,9 @@ app.controller("ConfigController", function ($rootScope, $scope, $http) {
 
     $scope.save = function () {
         $http.post("config", {sections: $rootScope.sections}).then(function () {
-            OC.Notification.showTemporary(t("calendar_news", "Configuration successfully saved"));
+            OCP.Toast.success(t("calendar_news", "Configuration successfully saved"));
         }, function () {
-            OC.Notification.showTemporary(t("calendar_news", "Failed to save configuration"), {type: "error"});
+            OCP.Toast.error(t("calendar_news", "Failed to save configuration"));
         });
     };
 
@@ -201,7 +201,7 @@ app.controller("PreviewController", function ($rootScope, $scope, $http) {
     }, true);
 
     function setPreviewHTML(html) {
-        var doc = $('#preview-iframe').get(0).contentWindow.document.open();
+        const doc = document.getElementById('preview-iframe').contentWindow.document.open();
         doc.write(html);
         doc.close();
     }

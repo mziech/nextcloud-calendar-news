@@ -107,9 +107,6 @@
 	width: 100%;
 }
 
-.calendar-news-simple #app-content {
-}
-
 .calendar-news-simple #app-content-wrapper {
 	display: flex;
 	flex-direction: row;
@@ -133,12 +130,6 @@
 	flex: 1 0 auto;
 }
 
-.calendar-news-simple #app-content-wrapper .center-container .loading {
-	display: flex;
-	flex-grow: 1;
-	justify-content: center;
-}
-
-.calendar-news-simple #app-content-wrapper .center-container .loading > div {
-	flex-grow: 0;
+.calendar-news-simple #app-content-wrapper.loading .center-container iframe {
+	display: none;
 }
