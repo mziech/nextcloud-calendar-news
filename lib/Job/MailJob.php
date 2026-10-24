@@ -27,14 +27,8 @@ use Psr\Log\LoggerInterface;
 
 class MailJob extends TimedJob {
 
-    /**
-     * @var ScheduleService
-     */
-    private $scheduleService;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ScheduleService $scheduleService;
+    private LoggerInterface $logger;
 
     function __construct(
         ITimeFactory $time,

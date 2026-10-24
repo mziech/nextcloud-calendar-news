@@ -27,10 +27,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 
 class ScheduleController extends Controller {
-    /**
-     * @var ScheduleService
-     */
-    private $scheduleService;
+    private ScheduleService $scheduleService;
 
     public function __construct(
         $AppName,

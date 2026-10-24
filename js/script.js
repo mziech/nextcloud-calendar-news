@@ -3,7 +3,7 @@ var app = angular.module("CalendarNews", ["ngRoute"]);
 
 app.config(function ($httpProvider, $routeProvider) {
     // Always send the CSRF token by default
-    $httpProvider.defaults.headers.common.requesttoken = oc_requesttoken;
+    $httpProvider.defaults.headers.common.requesttoken = OC.requestToken;
 
     $routeProvider
         .when('/content', {

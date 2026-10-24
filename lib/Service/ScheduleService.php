@@ -21,28 +21,20 @@
 namespace OCA\CalendarNews\Service;
 
 
+use OCP\IAppConfig;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
 class ScheduleService {
 
-    /**
-     * @var IConfig
-     */
-    private $config;
-    private $AppName;
-    /**
-     * @var NewsletterService
-     */
-    private $newsletterService;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private IAppConfig $config;
+    private string $AppName;
+    private NewsletterService $newsletterService;
+    private LoggerInterface $logger;
 
     function __construct(
-        $AppName,
-        IConfig $config,
+        string $AppName,
+        IAppConfig $config,
         NewsletterService $newsletterService,
         LoggerInterface $logger
     ) {
@@ -53,7 +45,7 @@ class ScheduleService {
     }
 
     public function load() {
-        $str = $this->config->getAppValue($this->AppName, "schedule");
+        $str = $this->config->getValueString($this->AppName, "schedule");
         if ($str != "") {
             return json_decode($str, true);
         }
@@ -68,7 +60,7 @@ class ScheduleService {
     }
 
     public function save($schedule) {
-        $this->config->setAppValue($this->AppName, "schedule", json_encode($schedule));
+        $this->config->setValueString($this->AppName, "schedule", json_encode($schedule));
     }
 
     public function sendNow() {
@@ -79,7 +71,7 @@ class ScheduleService {
     }
 
     public function getLastExecutionTime() {
-        $str = $this->config->getAppValue($this->AppName, "schedule.lastExecutionTime");
+        $str = $this->config->getValueString($this->AppName, "schedule.lastExecutionTime");
         if ($str != "") {
             return \DateTime::createFromFormat(\DateTimeInterface::ISO8601, $str);
         }
@@ -87,11 +79,11 @@ class ScheduleService {
     }
 
     public function setLastExecutionTime(\DateTime $t) {
-        $this->config->setAppValue($this->AppName, "schedule.lastExecutionTime", $t->format(\DateTimeInterface::ISO8601));
+        $this->config->setValueString($this->AppName, "schedule.lastExecutionTime", $t->format(\DateTimeInterface::ISO8601));
     }
 
     public function removeLastExecutionTime() {
-        $this->config->setAppValue($this->AppName, "schedule.lastExecutionTime", null);
+        $this->config->setValueString($this->AppName, "schedule.lastExecutionTime", null);
     }
 
     public function getNextExecutionTime($schedule=null) {

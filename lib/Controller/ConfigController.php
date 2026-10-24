@@ -37,18 +37,9 @@ use OCP\IRequest;
  * @package OCA\CalendarNews\Controller
  */
 class ConfigController extends Controller {
-    /**
-     * @var IManager
-     */
-    private $calendarManager;
-    /**
-     * @var ConfigService
-     */
-    private $configService;
-    /**
-     * @var NewsletterService
-     */
-    private $newsletterService;
+    private IManager $calendarManager;
+    private ConfigService $configService;
+    private NewsletterService $newsletterService;
 
     public function __construct(
         $AppName,

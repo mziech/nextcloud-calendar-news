@@ -34,26 +34,11 @@ use OCP\IRequest;
 
 class PageController extends Controller {
 	private $userId;
-    /**
-     * @var IGroupManager
-     */
-    private $groupManager;
-    /**
-     * @var IL10N
-     */
-    private $l;
-    /**
-     * @var NewsletterService
-     */
-    private $newsletterService;
-    /**
-     * @var ConfigService
-     */
-    private $configService;
-    /**
-     * @var ScheduleService
-     */
-    private $scheduleService;
+    private IGroupManager $groupManager;
+    private IL10N $l;
+    private NewsletterService $newsletterService;
+    private ConfigService $configService;
+    private ScheduleService $scheduleService;
 
     public function __construct(
         $AppName,

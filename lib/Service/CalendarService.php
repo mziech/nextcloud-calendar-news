@@ -29,23 +29,10 @@ use Psr\Log\LoggerInterface;
 
 class CalendarService {
 
-
-    /**
-     * @var CalDavBackend
-     */
-    private $calDavBackend;
-    /**
-     * @var IL10N
-     */
-    private $l10n;
-    /**
-     * @var IConfig
-     */
-    private $config;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private CalDavBackend $calDavBackend;
+    private IL10N $l10n;
+    private IConfig $config;
+    private LoggerInterface $logger;
 
     public function __construct(
         CalDavBackend $calDavBackend,

@@ -27,14 +27,8 @@ use OCP\IConfig;
 
 class ConfigService {
 
-    /**
-     * @var IConfig
-     */
-    private $config;
-    /**
-     * @var IManager
-     */
-    private $calendarManager;
+    private IConfig $config;
+    private IManager $calendarManager;
 
     private $AppName;
 

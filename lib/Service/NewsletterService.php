@@ -28,32 +28,14 @@ use Psr\Log\LoggerInterface;
 
 class NewsletterService {
 
-    /**
-     * @var ConfigService
-     */
-    private $configService;
-    /**
-     * @var IMailer
-     */
-    private $mailer;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var IL10N
-     */
-    private $l10n;
+    private ConfigService $configService;
+    private IMailer $mailer;
+    private LoggerInterface $logger;
+    private IL10N $l10n;
 
-    /**
-     * @var \DateTimeZone
-     */
-    private $tz;
-    /**
-     * @var CalendarService
-     */
-    private $calendarService;
-    private $oneDay;
+    private \DateTimeZone $tz;
+    private CalendarService $calendarService;
+    private \DateInterval $oneDay;
 
     function __construct(
         CalendarService $calendarService,
